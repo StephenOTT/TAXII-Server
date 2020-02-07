@@ -1,0 +1,14 @@
+micronaut:
+  application:
+    name: TAXII-Server-Micronaut
+  security:
+    enabled: false
+
+  router:
+    static-resources:
+      swagger:
+        paths: classpath:META-INF/swagger
+        mapping: /swagger/**
+      redoc:
+        paths: classpath:META-INF/swagger/views/redoc
+        mapping: /redoc/**
