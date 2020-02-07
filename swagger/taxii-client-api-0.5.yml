@@ -1,0 +1,952 @@
+openapi: 3.0.1
+info:
+  title: TAXII Client API
+  description: TAXII Client API (2.1)
+  contact:
+    name: StephenOTT
+    url: http://github.com/stephenott/TAXII-Server
+    email: http://github.com/stephenott/TAXII-Server
+  license:
+    name: --
+    url: http://github.com/stephenott
+  version: "0.5"
+paths:
+  /{apiRoot}:
+    get:
+      summary: Get information about a specific API Root
+      description: This Endpoint provides general information about an API Root, which
+        can be used to help users and clients decide whether and how they want to
+        interact with it. Multiple API Roots ​MAY​ be hosted on a single TAXII Server.
+        Often, an API Root represents a single trust group.
+      operationId: getApiRoot
+      parameters:
+      - name: apiRoot
+        in: path
+        description: the base URL of the API Root
+        required: true
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/api-root'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The Discovery service is not found, or the client does not
+            have access to the resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/status/{statusId}:
+    get:
+      summary: Get status information for a specific status ID
+      description: This Endpoint provides information about the status of a previous
+        request. In TAXII 2.1, the only request that can be monitored is one to add
+        objects to a Collection. It is typically used by TAXII Clients to monitor
+        a POST request that they made in order to take action when it is complete.
+      operationId: getStatus
+      parameters:
+      - name: apiRoot
+        in: path
+        description: the base URL of the API Root
+        required: true
+      - name: statusId
+        in: path
+        description: the ​identifier​ of the status message being requested
+        required: true
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/status'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root or Status ID are not found, or the client does
+            not have access to the resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections:
+    get:
+      summary: Get information about all collections
+      description: This Endpoint provides information about the Collections hosted
+        under this API Root. This is similar to the response to get a Collection,
+        but rather than providing information about one Collection it provides information
+        about all of the Collections. Most importantly, it provides the Collection's
+        ​id​, which is used to request objects or manifest entries from the Collection.
+      operationId: getCollections
+      parameters:
+      - name: apiRoot
+        in: path
+        description: the base URL of the API Root
+        required: true
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/collections'
+        400:
+          description: The server did not understand the request
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this collections resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root is not found, or the client does not have access
+            to the collections resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}:
+    get:
+      summary: Get information about a specific collection
+      description: This Endpoint provides general information about a Collection,
+        which can be used to help users and clients decide whether and how they want
+        to interact with it. For example, it will tell clients what it's called and
+        what permissions they have to it.
+      operationId: getCollection
+      parameters:
+      - name: apiRoot
+        in: path
+        description: the base URL of the API Root
+        required: true
+      - name: collectionId
+        in: path
+        description: the ​identifier​ of the Collection being requested
+        required: true
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/collections'
+        400:
+          description: The server did not understand the request
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this collections resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root or Collection ID are not found, or the client
+            does not have access to the collection resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}/manifest:
+    get:
+      summary: Get manifest information about the contents of a specific collection
+      description: This Endpoint retrieves a manifest about the objects in a Collection.
+        It supports filtering identical to the get objects Endpoint but rather than
+        returning the object itself it returns metadata about the object. It can be
+        used to retrieve metadata to decide whether it's worth retrieving the actual
+        objects.
+      operationId: getCollectionManifest
+      parameters:
+      - name: apiRoot
+        in: path
+        description: the base URL of the API Root
+        required: true
+      - name: collectionId
+        in: path
+        description: the ​identifier​ of the Collection being requested
+        required: true
+      - name: added_after
+        in: query
+        description: a single timestamp
+        example: '...'
+      - name: limit
+        in: query
+        description: a single integer
+        example: '...'
+      - name: next
+        in: query
+        description: a single string
+        example: '...'
+      - name: match[id]
+        in: query
+        description: an id(s) of an object
+        example: '...'
+      - name: match[type]
+        in: query
+        description: the type(s) of an object
+        example: '...'
+      - name: match[version]
+        in: query
+        description: the version(s) of an object
+        example: '...'
+      - name: match[spec_version]
+        in: query
+        description: the specification version(s)
+        example: '...'
+      responses:
+        200:
+          description: The request was successful
+          headers:
+            X-TAXII-Date-Added-First:
+              description: timestamp
+              required: true
+              schema:
+                type: integer
+                format: int64
+            X-TAXII-Date-Added-Last:
+              description: timestamp
+              required: true
+              schema:
+                type: integer
+                format: int64
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/manifest'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this manifest resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root or Collection ID are not found, or the client
+            does not have access to the manifest resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}/objects:
+    get:
+      summary: Get all objects from a collection
+      description: This Endpoint retrieves objects from a Collection. Clients can
+        search for objects in the Collection, retrieve all objects in a Collection,
+        or paginate through objects in the Collection.
+      operationId: getCollectionObjects
+      parameters:
+      - name: apiRoot
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: The request was successful
+          headers:
+            X-TAXII-Date-Added-First:
+              description: timestamp
+              required: true
+            X-TAXII-Date-Added-Last:
+              description: timestamp
+              required: true
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/envelop'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root or Collection ID are not found, or the client
+            does not have access to the objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+    post:
+      summary: Add a new object to a specific collection
+      description: This Endpoint adds objects to a Collection.
+      operationId: addCollectionObjects
+      parameters:
+      - name: apiRoot
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+      requestBody:
+        content:
+          application/taxii+json;version=2.1:
+            schema:
+              $ref: '#/components/schemas/envelop'
+        required: true
+      responses:
+        202:
+          description: The request was successful accepted
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/envelop'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to write to this objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root or Collection ID are not found, or the client
+            can not write to this objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        413:
+          description: The POSTed payload exceeds the max_content_length of the API
+            Root
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        415:
+          description: The client attempted to POST a payload with a content type
+            the server does not support
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        422:
+          description: The object type of version is not supported of could not be
+            processed.  This can happen, for example, when sending a version of STIX
+            that this TAXII Server does not support and cannot process, when sending
+            a malformed body, or other unprocessable content
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}/objects/{objectId}:
+    get:
+      summary: Get a specific object from a collection
+      description: This Endpoint gets an object from a Collection by its ​id​. It
+        can be thought of as a search where the match[id]​ parameter is set to the
+        ​{object-id}​ in the path. For STIX 2 objects, the ​{object-id}​ ​MUST be
+        the STIX ​id​.
+      operationId: getCollectionObject
+      parameters:
+      - name: apiRoot
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: objectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: The request was successful
+          headers:
+            X-TAXII-Date-Added-First:
+              description: timestamp
+              required: true
+            X-TAXII-Date-Added-Last:
+              description: timestamp
+              required: true
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/envelop'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root, Collection ID and/or Object ID are not found,
+            or the client does not have access to the object resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}/objects/{objectId}}:
+    delete:
+      summary: Delete a specific object from a collection
+      description: This Endpoint deletes an object from a Collection by its ​id​.
+        For STIX 2 objects, the ​{object-id}​ ​MUST be the STIX ​id​.
+      operationId: deleteCollectionObject
+      parameters:
+      - name: apiRoot
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: objectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1: {}
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client has access to the object, but not to delete it
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root, Collection ID and/or Object ID are not found,
+            or the client does not have access to the object
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /{apiRoot}/collections/{collectionId}/objects/{objectId}/versions:
+    get:
+      summary: Get a list of object versions from a collection
+      description: This Endpoint retrieves a list of one or more versions of an object
+        in a Collection. This list can be used to decide whether it's worth retrieving
+        the actual objects, or if new versions have been added. If a STIX object is
+        not versioned (and therefore does not have a modified timestamp), the server
+        ​MUST ​use created​ timestamp.
+      operationId: getCollectionObjectVersions
+      parameters:
+      - name: apiRoot
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: collectionId
+        in: path
+        required: true
+        schema:
+          type: string
+      - name: objectId
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: The request was successful
+          headers:
+            X-TAXII-Date-Added-First:
+              description: timestamp
+              required: true
+            X-TAXII-Date-Added-Last:
+              description: timestamp
+              required: true
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/versions'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this objects resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The API Root, Collection ID and/or Object ID are not found,
+            or the client does not have access to the object resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+  /taxii2:
+    get:
+      summary: Get information about the TAXII Server and any advertised API Roots
+      description: This Endpoint provides general information about a TAXII Server,
+        including the advertised API Roots. It's a common entry point for TAXII Clients
+        into the data and services provided by a TAXII Server.
+      operationId: discovery
+      parameters: []
+      responses:
+        200:
+          description: The request was successful
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/discovery'
+        400:
+          description: The server did not understand the request or filter parameters
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        401:
+          description: The client needs to authenticate
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        403:
+          description: The client does not have access to this resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        404:
+          description: The Discovery service is not found, or the client does not
+            have access to the resource
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+        406:
+          description: The media type provided in the Accept header is invalid
+          content:
+            application/taxii+json;version=2.1:
+              schema:
+                $ref: '#/components/schemas/error'
+components:
+  schemas:
+    api-root:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        versions:
+          type: array
+          items:
+            type: string
+        maxContentLength:
+          type: integer
+          format: int32
+      description: The ​api-root​ resource contains general information about the
+        API Root, such as a human-readable title​ and ​description​, the TAXII ​versions​
+        it supports, and the maximum size (​max_content_length​) of the content body
+        it will accept in a PUT or POST request.
+    error:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        errorId:
+          type: string
+          nullable: true
+        errorCode:
+          type: string
+          nullable: true
+        httpStatus:
+          type: string
+          nullable: true
+        externalDetails:
+          type: string
+          nullable: true
+        details:
+          type: object
+          additionalProperties: true
+          nullable: true
+      description: The ​error​ message is provided by TAXII Servers in the response
+        body when returning an HTTP error status and contains more information describing
+        the error, including a human-readable ​title​ and description​, an ​error_code​
+        and ​error_id​, and a ​details​ structure to capture further structured information
+        about the error. All of the properties are application-specific, and clients
+        shouldn't assume consistent meaning across TAXII Servers even if the codes,
+        IDs, or titles are the same.
+    RequestStatus:
+      type: string
+      enum:
+      - COMPLETE
+      - PENDING
+    status-details:
+      type: object
+      properties:
+        id:
+          type: string
+        version:
+          type: string
+        message:
+          type: string
+          nullable: true
+      description: This type represents an object that was added, is pending, or not
+        added to the Collection. It contains the id​ and ​version​ of the object along
+        with a ​message​ describing any details about its status.
+    status:
+      type: object
+      properties:
+        id:
+          type: string
+        status:
+          $ref: '#/components/schemas/RequestStatus'
+        requestTimestamp:
+          type: integer
+          format: int64
+          nullable: true
+        totalCount:
+          type: integer
+          format: int32
+        successCount:
+          type: integer
+          format: int32
+        successes:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/status-details'
+        failureCount:
+          type: integer
+          format: int32
+        failures:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/status-details'
+        pendingCount:
+          type: integer
+          format: int32
+        pendings:
+          type: array
+          nullable: true
+          items:
+            $ref: '#/components/schemas/status-details'
+      description: The status resource represents information about a request to add
+        objects to a Collection. It contains information about the status of the request,
+        such as whether or not it's completed (​status​) and ​MAY contain the status
+        of individual objects within the request (i.e. whether they are still pending,
+        completed and failed, or completed and succeeded).
+    collection:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        alias:
+          type: string
+          nullable: true
+        canRead:
+          type: boolean
+        canWrite:
+          type: boolean
+        mediaTypes:
+          type: array
+          items:
+            type: string
+      description: The ​collection​ resource contains general information about a
+        Collection, such as its ​id​, a human-readable ​title​ and ​description​,
+        an optional list of supported ​media_types​ (representing the media type of
+        objects can be requested from or added to it), and whether the TAXII Client,
+        as authenticated, can get objects from the Collection and/or add objects to
+        it.
+    collections:
+      type: object
+      properties:
+        collections:
+          type: array
+          items:
+            $ref: '#/components/schemas/collection'
+      description: The ​collections​ resource is a simple wrapper around a list of
+        ​collection​ resources.
+    manifest-record:
+      type: object
+      properties:
+        id:
+          type: string
+        dateAdded:
+          type: integer
+          format: int64
+        version:
+          type: string
+        mediaType:
+          type: string
+          nullable: true
+      description: The ​manifest-record​ type captures metadata about a single version
+        of an ​object​, indicated by the ​id property. The metadata includes information
+        such as when that version of the object was added to the Collection, the version
+        of the object itself, and the media type that this specific version of the
+        object is available in.
+    manifest:
+      type: object
+      properties:
+        more:
+          type: boolean
+        objects:
+          type: array
+          items:
+            $ref: '#/components/schemas/manifest-record'
+      description: The ​manifest​ resource is a simple wrapper around a list of ​manifest-record​
+        items.
+    Map<String,Object>:
+      type: object
+    envelop:
+      type: object
+      properties:
+        more:
+          type: boolean
+          description: This property identifies if there is more content available
+            based on the search criteria. The absence of this property means the value
+            is false.
+        next:
+          type: string
+          description: This property identifies the server provided value of the next
+            record or set of records in the paginated data set. This property ​MAY​
+            be populated if the ​more​ property is set to ​true.​
+          nullable: true
+        objects:
+          type: array
+          description: This property contains one or more STIX Objects. Objects in
+            this list ​MUST​ be a STIX Object (e.g., SDO, SCO, SRO, Language Content
+            object, or a Marking Definition object).
+          items:
+            $ref: '#/components/schemas/Map<String,Object>'
+      description: The envelope is a simple wrapper for STIX 2 content. When returning
+        STIX 2 content in a TAXII response the HTTP root object payload ​MUST​ be
+        an ​envelope​. This specification does not define any other form of content
+        wrapper for objects outside of STIX content.
+    versions:
+      type: object
+      properties:
+        more:
+          type: boolean
+          nullable: true
+        versions:
+          type: array
+          items:
+            type: integer
+            format: int64
+      description: The ​versions​ resource is a simple wrapper around a list of versions.
+    discovery:
+      type: object
+      properties:
+        title:
+          type: string
+        description:
+          type: string
+          nullable: true
+        contact:
+          type: string
+          nullable: true
+        default:
+          type: string
+          nullable: true
+        apiRoots:
+          type: array
+          nullable: true
+          items:
+            type: string
+      description: The ​discovery​ resource contains information about a TAXII Server,
+        such as a human-readable ​title​, description​, and ​contact​ information,
+        as well as a list of API Roots that it is advertising. It also has an indication
+        of which API Root it considers the ​default​, or the one to use in the absence
+        of another information/user choice.
