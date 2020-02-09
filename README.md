@@ -16,6 +16,14 @@ Download the jar from [releases](https://github.com/StephenOTT/TAXII-Server/rele
 
 Then run: `java -jar taxii-server-micronaut-0.5-all.jar`
 
+
+# Docker
+
+1. Go to project
+1. Run `docker build -t taxii-server .`
+3. Run `docker run -p 8080:8080 --name taxii taxii-server`
+
+
 # OpenAPI / Swagger file
 
 Start the server and go to: `http://localhost:8080/swagger/taxii-client-api-0.5.yml`
