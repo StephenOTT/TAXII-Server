@@ -1,6 +1,6 @@
 package com.github.stephenott.stix.taxii.action
 
-interface Action<out T> {
+interface Action<B, R> {
 
-    fun execute():T
+    fun execute(providerRequest: ProviderRequest<B>): ProviderResponse<R>
 }

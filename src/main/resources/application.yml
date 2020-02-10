@@ -2,7 +2,16 @@ micronaut:
   application:
     name: TAXII-Server-Micronaut
   security:
-    enabled: false
+    enabled: true
+    intercept-url-map:
+      - pattern: /swagger/**
+        http-method: GET
+        access:
+          - isAnonymous()
+      - pattern: /redoc/**
+        http-method: GET
+        access:
+          - isAnonymous()
 
   router:
     static-resources:

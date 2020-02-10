@@ -19,7 +19,7 @@ class FilterException(httpStatus: String, taxiError: Error = Error(
 )): TaxiiException(taxiError){}
 
 class AuthenticationException(httpStatus: String, taxiError: Error = Error(
-        title = "Could not Authenticate the client",
+        title = "Could not authenticate the client",
         httpStatus = httpStatus
 )): TaxiiException(taxiError){}
 

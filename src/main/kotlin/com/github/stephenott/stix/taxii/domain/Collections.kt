@@ -1,7 +1,7 @@
 package com.github.stephenott.stix.taxii.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.github.stephenott.stix.taxii.controller.MediaTypes
+import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(name = "collections", description = "The \u200Bcollections\u200B resource is a simple wrapper around a list of \u200Bcollection\u200B resources.")
@@ -17,5 +17,5 @@ data class Collection(
         val alias: String? = null,
         @JsonProperty("can_read") val canRead: Boolean,
         @JsonProperty("can_write") val canWrite: Boolean,
-        val mediaTypes: List<String> = listOf(MediaTypes.APPLCATION_JSON_TAXII)
+        val mediaTypes: List<TaxiiMediaType>
 )
