@@ -62,6 +62,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/status/{statusId}:
     get:
       summary: Get status information for a specific status ID
@@ -117,6 +119,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections:
     get:
       summary: Get information about all collections
@@ -169,6 +173,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}:
     get:
       summary: Get information about a specific collection
@@ -224,6 +230,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}/manifest:
     get:
       summary: Get manifest information about the contents of a specific collection
@@ -321,6 +329,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}/objects:
     get:
       summary: Get all objects from a collection
@@ -384,6 +394,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
     post:
       summary: Add a new object to a specific collection
       description: This Endpoint adds objects to a Collection.
@@ -466,6 +478,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}/objects/{objectId}:
     get:
       summary: Get a specific object from a collection
@@ -535,6 +549,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}/objects/{objectId}}:
     delete:
       summary: Delete a specific object from a collection
@@ -593,6 +609,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /{apiRoot}/collections/{collectionId}/objects/{objectId}/versions:
     get:
       summary: Get a list of object versions from a collection
@@ -663,6 +681,8 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
   /taxii2:
     get:
       summary: Get information about the TAXII Server and any advertised API Roots
@@ -709,8 +729,13 @@ paths:
             application/taxii+json;version=2.1:
               schema:
                 $ref: '#/components/schemas/error'
+      security:
+      - basicAuth: []
 components:
   schemas:
+    TaxiiMediaType:
+      type: object
+      description: A Media Type that is for TAXII content such as application/taxii+json;version=2.1
     api-root:
       type: object
       properties:
@@ -722,7 +747,7 @@ components:
         versions:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/TaxiiMediaType'
         maxContentLength:
           type: integer
           format: int32
@@ -842,7 +867,7 @@ components:
         mediaTypes:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/TaxiiMediaType'
       description: The ​collection​ resource contains general information about a
         Collection, such as its ​id​, a human-readable ​title​ and ​description​,
         an optional list of supported ​media_types​ (representing the media type of
@@ -858,6 +883,9 @@ components:
             $ref: '#/components/schemas/collection'
       description: The ​collections​ resource is a simple wrapper around a list of
         ​collection​ resources.
+    StixMediaType:
+      type: object
+      description: A Media Type that is for STIX content such as application/stix+json;version=2.1
     manifest-record:
       type: object
       properties:
@@ -869,8 +897,7 @@ components:
         version:
           type: string
         mediaType:
-          type: string
-          nullable: true
+          $ref: '#/components/schemas/StixMediaType'
       description: The ​manifest-record​ type captures metadata about a single version
         of an ​object​, indicated by the ​id property. The metadata includes information
         such as when that version of the object was added to the Collection, the version
@@ -950,3 +977,8 @@ components:
         as well as a list of API Roots that it is advertising. It also has an indication
         of which API Root it considers the ​default​, or the one to use in the absence
         of another information/user choice.
+  securitySchemes:
+    basicAuth:
+      type: http
+      description: Basic Authentication
+      scheme: Authorization

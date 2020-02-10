@@ -15,10 +15,14 @@ import io.micronaut.security.rules.SecurityRule
 import io.micronaut.validation.Validated
 import io.reactivex.Single
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.security.SecurityScheme
+import io.swagger.v3.oas.annotations.security.SecuritySchemes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.Principal
@@ -27,6 +31,14 @@ import javax.inject.Inject
 @Controller("/taxii2")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Validated
+@SecuritySchemes(
+        SecurityScheme(
+                type = SecuritySchemeType.HTTP,
+                name = "basicAuth",
+                description = "Basic Authentication",
+                scheme = "Authorization"
+        )
+)
 open class DiscoveryController() {
 
     private val log: Logger = LoggerFactory.getLogger(DiscoveryController::class.java)
@@ -41,7 +53,10 @@ open class DiscoveryController() {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Operation(
             summary = "Get information about the TAXII Server and any advertised API Roots",
-            description = "This Endpoint provides general information about a TAXII Server, including the advertised API Roots. It's a common entry point for TAXII Clients into the data and services provided by a TAXII Server."
+            description = "This Endpoint provides general information about a TAXII Server, including the advertised API Roots. It's a common entry point for TAXII Clients into the data and services provided by a TAXII Server.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Discovery::class))]),

@@ -18,11 +18,15 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.enums.ParameterIn
+import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.headers.Header
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
+import io.swagger.v3.oas.annotations.security.SecurityRequirement
+import io.swagger.v3.oas.annotations.security.SecurityScheme
+import io.swagger.v3.oas.annotations.security.SecuritySchemes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.Principal
@@ -32,42 +36,50 @@ import javax.inject.Inject
 @Controller("/{apiRoot}/")
 @Secured(SecurityRule.IS_AUTHENTICATED)
 @Validated
+@SecuritySchemes(
+        SecurityScheme(
+                type = SecuritySchemeType.HTTP,
+                name = "basicAuth",
+                description = "Basic Authentication",
+                scheme = "Authorization"
+        )
+)
 open class RootsController() {
 
     private val log: Logger = LoggerFactory.getLogger(RootsController::class.java)
 
     @Inject
-    lateinit var getApiRootInformationProvider: GetApiRootInformationProvider
+    private lateinit var getApiRootInformationProvider: GetApiRootInformationProvider
 
     @Inject
-    lateinit var getStatusProvider: GetStatusProvider
+    private lateinit var getStatusProvider: GetStatusProvider
 
     @Inject
-    lateinit var getCollectionsProvider: GetCollectionsProvider
+    private lateinit var getCollectionsProvider: GetCollectionsProvider
 
     @Inject
-    lateinit var getCollectionProvider: GetCollectionProvider
+    private lateinit var getCollectionProvider: GetCollectionProvider
 
     @Inject
-    lateinit var getCollectionManifestProvider: GetCollectionManifestProvider
+    private lateinit var getCollectionManifestProvider: GetCollectionManifestProvider
 
     @Inject
-    lateinit var getCollectionObjectsProvider: GetCollectionObjectsProvider
+    private lateinit var getCollectionObjectsProvider: GetCollectionObjectsProvider
 
     @Inject
-    lateinit var addCollectionObjectsProvider: AddCollectionObjectsProvider
+    private lateinit var addCollectionObjectsProvider: AddCollectionObjectsProvider
 
     @Inject
-    lateinit var getCollectionObjectProvider: GetCollectionObjectProvider
+    private lateinit var getCollectionObjectProvider: GetCollectionObjectProvider
 
     @Inject
-    lateinit var deleteCollectionObjectProvider: DeleteCollectionObjectProvider
+    private lateinit var deleteCollectionObjectProvider: DeleteCollectionObjectProvider
 
     @Inject
-    lateinit var getCollectionObjectVersionsProvider: GetCollectionObjectVersionsProvider
+    private lateinit var getCollectionObjectVersionsProvider: GetCollectionObjectVersionsProvider
 
     @Inject
-    lateinit var mapper: ObjectMapper
+    private lateinit var mapper: ObjectMapper
 
     @Get(value = "/")
     @Secured(SecurityRule.IS_AUTHENTICATED)
@@ -76,6 +88,9 @@ open class RootsController() {
             description = "This Endpoint provides general information about an API Root, which can be used to help users and clients decide whether and how they want to interact with it. Multiple API Roots \u200BMAY\u200B be hosted on a single TAXII Server. Often, an API Root represents a single trust group.",
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root")
+            ],
+            security = [
+                SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
@@ -113,6 +128,9 @@ open class RootsController() {
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
                 Parameter(name = "statusId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the status message being requested")
+            ],
+            security = [
+                SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
@@ -153,6 +171,9 @@ open class RootsController() {
             description = "This Endpoint provides information about the Collections hosted under this API Root. This is similar to the response to get a Collection, but rather than providing information about one Collection it provides information about all of the Collections. Most importantly, it provides the Collection's \u200Bid\u200B, which is used to request objects or manifest entries from the Collection.",
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root")
+            ],
+            security = [
+                SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
@@ -191,6 +212,9 @@ open class RootsController() {
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested")
+            ],
+            security = [
+                SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
@@ -240,6 +264,9 @@ open class RootsController() {
                 Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
                 Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
                 Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+            ],
+            security = [
+                SecurityRequirement(name = "basicAuth")
             ]
     )
     //@TODO required Headers Accept: application/taxii+json;version=2.1,application/stix+json;version=2.1
@@ -284,7 +311,10 @@ open class RootsController() {
     @ExplosionTarget(["match"])
     @Operation(
             summary = "Get all objects from a collection",
-            description = "This Endpoint retrieves objects from a Collection. Clients can search for objects in the Collection, retrieve all objects in a Collection, or paginate through objects in the Collection."
+            description = "This Endpoint retrieves objects from a Collection. Clients can search for objects in the Collection, retrieve all objects in a Collection, or paginate through objects in the Collection.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
@@ -336,7 +366,10 @@ open class RootsController() {
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Operation(
             summary = "Add a new object to a specific collection",
-            description = "This Endpoint adds objects to a Collection."
+            description = "This Endpoint adds objects to a Collection.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
@@ -380,7 +413,10 @@ open class RootsController() {
     @ExplosionTarget(["match"])
     @Operation(
             summary = "Get a specific object from a collection",
-            description = "This Endpoint gets an object from a Collection by its \u200Bid\u200B. It can be thought of as a search where the match[id]\u200B parameter is set to the \u200B{object-id}\u200B in the path. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B."
+            description = "This Endpoint gets an object from a Collection by its \u200Bid\u200B. It can be thought of as a search where the match[id]\u200B parameter is set to the \u200B{object-id}\u200B in the path. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
@@ -433,7 +469,10 @@ open class RootsController() {
     @ExplosionTarget(["match"])
     @Operation(
             summary = "Delete a specific object from a collection",
-            description = "This Endpoint deletes an object from a Collection by its \u200Bid\u200B. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B."
+            description = "This Endpoint deletes an object from a Collection by its \u200Bid\u200B. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
@@ -478,7 +517,10 @@ open class RootsController() {
     @ExplosionTarget(["match"])
     @Operation(
             summary = "Get a list of object versions from a collection",
-            description = "This Endpoint retrieves a list of one or more versions of an object in a Collection. This list can be used to decide whether it's worth retrieving the actual objects, or if new versions have been added. If a STIX object is not versioned (and therefore does not have a modified timestamp), the server \u200BMUST \u200Buse created\u200B timestamp."
+            description = "This Endpoint retrieves a list of one or more versions of an object in a Collection. This list can be used to decide whether it's worth retrieving the actual objects, or if new versions have been added. If a STIX object is not versioned (and therefore does not have a modified timestamp), the server \u200BMUST \u200Buse created\u200B timestamp.",
+            security = [
+                SecurityRequirement(name = "basicAuth")
+            ]
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
