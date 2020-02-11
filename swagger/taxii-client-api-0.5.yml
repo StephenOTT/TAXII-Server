@@ -947,12 +947,13 @@ components:
             $ref: '#/components/schemas/manifest-record'
       description: The ​manifest​ resource is a simple wrapper around a list of ​manifest-record​
         items.
-    StixObject:
+    stix-object:
       type: object
       properties:
         stixObject:
           type: object
           additionalProperties: true
+      description: A STIX Object
     envelop:
       type: object
       properties:
@@ -970,7 +971,7 @@ components:
         objects:
           type: array
           items:
-            $ref: '#/components/schemas/StixObject'
+            $ref: '#/components/schemas/stix-object'
       description: The envelope is a simple wrapper for STIX 2 content. When returning
         STIX 2 content in a TAXII response the HTTP root object payload ​MUST​ be
         an ​envelope​. This specification does not define any other form of content

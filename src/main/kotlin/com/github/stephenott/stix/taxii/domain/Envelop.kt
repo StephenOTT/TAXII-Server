@@ -19,10 +19,9 @@ data class Envelop(
 
         //@TODO review ArraySchema usage as it is not working as expected
         @field:ArraySchema(
-                    arraySchema = Schema(description = "This property contains one or more STIX Objects. Objects in this list \u200BMUST\u200B be a STIX Object (e.g., SDO, SCO, SRO, Language Content object, or a Marking Definition object)."),
-                    schema = Schema(name = "stix-object1", type = "object"),
-                    uniqueItems = true)
-        val objects: List<StixObject> = listOf() // Is this supposed to be a null or empty list?
+                arraySchema = Schema(description = "This property contains one or more STIX Objects. Objects in this list MUST be a STIX Object (e.g., SDO, SCO, SRO, Language Content object, or a Marking Definition object)."),
+                uniqueItems = true)
+        val objects: List<StixObject> = listOf()
 ) : TaxiiDomain {
     init {
         next?.let {

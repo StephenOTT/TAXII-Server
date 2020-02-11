@@ -5,7 +5,7 @@ import com.fasterxml.jackson.annotation.JsonAnySetter
 import io.swagger.v3.oas.annotations.media.Schema
 
 //@TODO need to move to a model converter
-//@Schema(name = "stix-object", type = "object")
+@Schema(name = "stix-object", description = "A STIX Object")
 data class StixObject(
         @JsonAnySetter
         @get:JsonAnyGetter
