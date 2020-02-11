@@ -753,8 +753,11 @@ components:
       properties:
         title:
           type: string
+          description: A human readable plain text name used to identify this API
+            instance.
         description:
           type: string
+          description: A human readable plain text description for this API Root.
           nullable: true
         versions:
           type: array
@@ -762,6 +765,15 @@ components:
             $ref: '#/components/schemas/TaxiiMediaType'
         max_content_length:
           type: integer
+          description: The maximum size of the request body in octets (8-bit bytes)
+            that the server can support. The value of the max_content_length​ ​MUST​
+            be a positive ​integer greater than zero. This applies to requests only
+            and is determined by the server. Requests with total body length values
+            smaller than this value ​MUST NOT​ result in an HTTP 413 (Request Entity
+            Too Large) response. If for example, the server supported 100 MB of data,
+            the value for this property would be determined by 100*1024*1024 which
+            equals 104,857,600. This property contains useful information for the
+            client when it POSTs requests to the Add Objects endpoint.
           format: int32
       description: The ​api-root​ resource contains general information about the
         API Root, such as a human-readable title​ and ​description​, the TAXII ​versions​
@@ -830,10 +842,16 @@ components:
       properties:
         id:
           type: string
+          description: The identifier of the object that succeed, is pending, or failed
+            to be created. For STIX objects the ​id​ ​MUST​ be the STIX Object ​id​.
+            For object types that do not have their own identifier, the server ​MAY
+            ​use any value as the ​id​.
         version:
-          type: string
+          $ref: '#/components/schemas/Timestamp'
         message:
           type: string
+          description: A message indicating more information about the object being
+            created, its pending state, or why the object failed to be created.
           nullable: true
       description: This type represents an object that was added, is pending, or not
         added to the Collection. It contains the id​ and ​version​ of the object along
@@ -843,34 +861,52 @@ components:
       properties:
         id:
           type: string
+          description: The ​identifier​ of this Status resource.
         status:
           $ref: '#/components/schemas/RequestStatus'
         request_timestamp:
           $ref: '#/components/schemas/Timestamp'
         totalCount:
           type: integer
+          description: The total number of objects that were in the request, which
+            would be the number of objects in the ​envelope​. The value of the ​total_count
+            MUST​ be a positive ​integer​ greater than or equal to zero. If this property
+            has a value of 0, then the TAXII Server has not yet started processing
+            the request.
           format: int32
         success_count:
           type: integer
+          description: The number of objects that were successfully created. The value
+            of the ​success_count​ ​MUST be a positive ​integer​ greater than or equal
+            to zero.
           format: int32
         successes:
           type: array
+          description: A list of objects that was successfully processed.
           nullable: true
           items:
             $ref: '#/components/schemas/status-details'
         failure_count:
           type: integer
+          description: The number of objects that failed to be created. The value
+            of the ​failure_count​ ​MUST​ be a positive ​integer​ greater than or
+            equal to zero.
           format: int32
         failures:
           type: array
+          description: A list of objects that was not successfully processed.
           nullable: true
           items:
             $ref: '#/components/schemas/status-details'
         pending_count:
           type: integer
+          description: The number of objects that have yet to be processed. The value
+            of the ​pending_count MUST​ be a positive ​integer​ greater than or equal
+            to zero.
           format: int32
         pendings:
           type: array
+          description: A list of objects that have yet to be processed.
           nullable: true
           items:
             $ref: '#/components/schemas/status-details'
@@ -884,20 +920,44 @@ components:
       properties:
         id:
           type: string
+          description: The ​id​ property universally and uniquely identifies this
+            Collection. It is used in the Get Collection Endpoint (see section​ ​5.2​)
+            as the ​{id}​ parameter to retrieve the Collection.
         title:
           type: string
+          description: A human readable plain text title used to identify this Collection.
         description:
           type: string
+          description: A human readable plain text description for this Collection.
           nullable: true
         alias:
           type: string
+          description: A human readable collection name that can be used on systems
+            to alias a collection ID. This could be used by organizations that want
+            to preconfigure a known collection of data, regardless of the underlying,
+            collection ID that is configured on a specific implementations.  If defined,
+            the alias ​MUST​ be unique within a single api-root on a single TAXII
+            server. There is no guarantee that an alias is globally unique across
+            api-roots or TAXII server instances.
           nullable: true
         can_read:
           type: boolean
+          description: Indicates if the requester can read (i.e., GET) objects from
+            this Collection. If​ t​ rue​,​ users are allowed to access the ​Get Objects​,
+            ​Get an Object​, or G​ et Object Manifests​ endpoints for this Collection.
+            If​ f​ alse​, ​users are not allowed to access these endpoints.
         can_write:
           type: boolean
+          description: Indicates if the requester can write (i.e., POST) objects to
+            this Collection. If​ ​true​,​ users are allowed to access the ​Add Objects​
+            endpoint for this Collection. If​ ​false​, users are not allowed to access
+            this endpoint.
         media_types:
           type: array
+          description: A list of supported media types for Objects in this Collection.
+            Absence of this property is equivalent to a single-value list containing
+            "​application/stix+json"​. This list ​MUST​ describe all media types that
+            the Collection can store.
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
       description: The ​collection​ resource contains general information about a
