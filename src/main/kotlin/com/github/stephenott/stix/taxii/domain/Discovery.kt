@@ -9,8 +9,10 @@ data class Discovery(
         val description: String? = null,
         val contact: String? = null,
         val default: String? = null,
-        @JsonProperty("api_roots") val apiRoots: List<String>? = null // @TODO should be a null or empty list?
-) {
+
+        @JsonProperty("api_roots") @field:Schema(name = "api_roots")
+        val apiRoots: List<String>? = null // @TODO should be a null or empty list?
+): TaxiiDomain {
     init {
         default?.let {
             require(apiRoots != null)

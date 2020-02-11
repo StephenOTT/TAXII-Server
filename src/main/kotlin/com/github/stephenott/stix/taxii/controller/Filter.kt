@@ -1,9 +1,9 @@
 package com.github.stephenott.stix.taxii.controller
 
-import java.time.Instant
+import com.github.stephenott.stix.taxii.domain.types.Timestamp
 
 data class Filter(
-        val addedAfter: Instant,
+        val addedAfter: Timestamp,
         val limit: Int,
         val next: String,
         val matches: Map<String, Any>

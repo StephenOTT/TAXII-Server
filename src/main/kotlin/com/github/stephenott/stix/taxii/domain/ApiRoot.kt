@@ -8,9 +8,13 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class ApiRoot(
         val title: String,
         val description: String? = null,
+
         val versions: List<TaxiiMediaType>, //@TODO rebuild to be proper types for versions
-        @JsonProperty("max_content_length") val maxContentLength: Int
-) {
+
+        @JsonProperty("max_content_length") @field:Schema(name = "max_content_length")
+        val maxContentLength: Int
+
+): TaxiiDomain {
     init {
 //        require(TaxiiVersion.defaultTaxiiVersion in versions, lazyMessage = {"api-root versions property must include ${TaxiiVersion.defaultTaxiiVersion}"})
 //        require(versions.containsAll(TaxiiVersion.supportedTaxiiVersions), lazyMessage = {"api-root versions property can only include ${TaxiiVersion.supportedTaxiiVersions}"})

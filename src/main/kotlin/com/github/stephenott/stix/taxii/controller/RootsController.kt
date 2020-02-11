@@ -8,6 +8,7 @@ import com.github.stephenott.stix.taxii.domain.*
 import com.github.stephenott.stix.taxii.domain.Collection
 import com.github.stephenott.stix.taxii.domain.Error
 import com.github.stephenott.stix.taxii.domain.Status
+import com.github.stephenott.stix.taxii.domain.types.Timestamp
 import io.micronaut.http.*
 import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
@@ -30,7 +31,6 @@ import io.swagger.v3.oas.annotations.security.SecuritySchemes
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.security.Principal
-import java.time.Instant
 import javax.inject.Inject
 
 @Controller("/{apiRoot}/")
@@ -273,8 +273,8 @@ open class RootsController() {
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Manifest::class))],
                     headers = [
-                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Instant::class)),
-                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Instant::class))
+                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
+                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
             ),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -330,8 +330,8 @@ open class RootsController() {
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
                     headers = [
-                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp"),
-                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp")
+                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
+                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
             ),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -431,8 +431,8 @@ open class RootsController() {
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
                     headers = [
-                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp"),
-                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp")
+                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
+                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
             ),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -534,8 +534,8 @@ open class RootsController() {
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Versions::class))],
                     headers = [
-                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp"),
-                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp")
+                        Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
+                        Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
             ),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),

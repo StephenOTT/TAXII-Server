@@ -11,10 +11,7 @@ class Headers(
         @Header @JsonProperty(USER_AGENT) val userAgent: String? = null,
         @Header @JsonProperty(WWW_AUTHENTICATE) val wwwAuthenticate: String? = null,
         @Header @JsonAnySetter val additionalHeaders: Map<String, List<String>>
-
 ) {
-
-
 
     companion object {
         const val ACCEPT: String = "Accept"

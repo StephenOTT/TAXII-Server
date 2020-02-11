@@ -3,7 +3,7 @@ package com.github.stephenott.stix.taxii.controller
 import io.micronaut.http.MediaType
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(name = "TaxiiMediaType", description = "A Media Type that is for TAXII content such as application/taxii+json;version=2.1")
+@Schema(name = "TaxiiMediaType", type = "string", format = "taxii-media-type", description = "A Media Type that is for TAXII content such as application/taxii+json;version=2.1", example = "application/taxii+json;version=2.1")
 interface TaxiiMediaType{
     companion object {
         const val APPLCATION_JSON_TAXII: String = "application/taxii+json"
@@ -18,7 +18,7 @@ interface TaxiiMediaType{
 }
 class TaxiiMedia(version: String): MediaType("${TaxiiMediaType.APPLCATION_JSON_TAXII};version=${version}"), TaxiiMediaType
 
-@Schema(name = "StixMediaType", description = "A Media Type that is for STIX content such as application/stix+json;version=2.1")
+@Schema(name = "StixMediaType", type = "string", format = "stix-media-type", description = "A Media Type that is for STIX content such as application/stix+json;version=2.1", example = "application/stix+json;version=2.1")
 interface StixMediaType{
     companion object{
         const val APPLCATION_JSON_STIX: String = "application/stix+json"
