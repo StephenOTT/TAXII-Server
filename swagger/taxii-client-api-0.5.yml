@@ -286,14 +286,12 @@ paths:
               description: timestamp
               required: true
               schema:
-                type: integer
-                format: int64
+                $ref: '#/components/schemas/Timestamp'
             X-TAXII-Date-Added-Last:
               description: timestamp
               required: true
               schema:
-                type: integer
-                format: int64
+                $ref: '#/components/schemas/Timestamp'
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -356,9 +354,13 @@ paths:
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
             X-TAXII-Date-Added-Last:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -511,9 +513,13 @@ paths:
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
             X-TAXII-Date-Added-Last:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -643,9 +649,13 @@ paths:
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
             X-TAXII-Date-Added-Last:
               description: timestamp
               required: true
+              schema:
+                $ref: '#/components/schemas/Timestamp'
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -734,8 +744,10 @@ paths:
 components:
   schemas:
     TaxiiMediaType:
-      type: object
+      type: string
       description: A Media Type that is for TAXII content such as application/taxii+json;version=2.1
+      format: taxii-media-type
+      example: application/taxii+json;version=2.1
     api-root:
       type: object
       properties:
@@ -748,7 +760,7 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
-        maxContentLength:
+        max_content_length:
           type: integer
           format: int32
       description: The ​api-root​ resource contains general information about the
@@ -760,24 +772,43 @@ components:
       properties:
         title:
           type: string
+          description: A human readable plain text title for this error.
         description:
           type: string
+          description: A human readable ​plain text​ description that gives details
+            about the error or problem that was encountered by the application.
           nullable: true
-        errorId:
+        error_id:
           type: string
+          description: An identifier for this particular error instance. A TAXII Server
+            might choose to assign each error occurrence its own identifier in order
+            to facilitate debugging.
           nullable: true
-        errorCode:
+        error_code:
           type: string
+          description: The error code for this error type. A TAXII Server might choose
+            to assign a common error code to all errors of the same type. Error codes
+            are application-specific and not intended to be meaningful across different
+            TAXII Servers​.
           nullable: true
-        httpStatus:
+        http_status:
           type: string
+          description: The HTTP status code applicable to this error. If this property
+            is provided it ​MUST​ match the HTTP status code found in the HTTP header.
           nullable: true
-        externalDetails:
+        external_details:
           type: string
+          description: A URL that points to additional details. For example, this
+            could be a URL pointing to a knowledge base article describing the error
+            code. Absence of this property indicates that there are no additional
+            details.
           nullable: true
         details:
           type: object
           additionalProperties: true
+          description: The details property captures additional server-specific details
+            about the error. The keys and values are determined by the TAXII Server
+            and ​MAY be any valid JSON object structure.
           nullable: true
       description: The ​error​ message is provided by TAXII Servers in the response
         body when returning an HTTP error status and contains more information describing
@@ -791,6 +822,9 @@ components:
       enum:
       - COMPLETE
       - PENDING
+    Timestamp:
+      type: string
+      format: date-time
     status-details:
       type: object
       properties:
@@ -811,14 +845,12 @@ components:
           type: string
         status:
           $ref: '#/components/schemas/RequestStatus'
-        requestTimestamp:
-          type: integer
-          format: int64
-          nullable: true
+        request_timestamp:
+          $ref: '#/components/schemas/Timestamp'
         totalCount:
           type: integer
           format: int32
-        successCount:
+        success_count:
           type: integer
           format: int32
         successes:
@@ -826,7 +858,7 @@ components:
           nullable: true
           items:
             $ref: '#/components/schemas/status-details'
-        failureCount:
+        failure_count:
           type: integer
           format: int32
         failures:
@@ -834,7 +866,7 @@ components:
           nullable: true
           items:
             $ref: '#/components/schemas/status-details'
-        pendingCount:
+        pending_count:
           type: integer
           format: int32
         pendings:
@@ -860,11 +892,11 @@ components:
         alias:
           type: string
           nullable: true
-        canRead:
+        can_read:
           type: boolean
-        canWrite:
+        can_write:
           type: boolean
-        mediaTypes:
+        media_types:
           type: array
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
@@ -884,19 +916,20 @@ components:
       description: The ​collections​ resource is a simple wrapper around a list of
         ​collection​ resources.
     StixMediaType:
-      type: object
+      type: string
       description: A Media Type that is for STIX content such as application/stix+json;version=2.1
+      format: stix-media-type
+      example: application/stix+json;version=2.1
     manifest-record:
       type: object
       properties:
         id:
           type: string
-        dateAdded:
-          type: integer
-          format: int64
+        date_added:
+          $ref: '#/components/schemas/Timestamp'
         version:
-          type: string
-        mediaType:
+          $ref: '#/components/schemas/Timestamp'
+        media_type:
           $ref: '#/components/schemas/StixMediaType'
       description: The ​manifest-record​ type captures metadata about a single version
         of an ​object​, indicated by the ​id property. The metadata includes information
@@ -914,8 +947,12 @@ components:
             $ref: '#/components/schemas/manifest-record'
       description: The ​manifest​ resource is a simple wrapper around a list of ​manifest-record​
         items.
-    Map<String,Object>:
+    StixObject:
       type: object
+      properties:
+        stixObject:
+          type: object
+          additionalProperties: true
     envelop:
       type: object
       properties:
@@ -932,11 +969,8 @@ components:
           nullable: true
         objects:
           type: array
-          description: This property contains one or more STIX Objects. Objects in
-            this list ​MUST​ be a STIX Object (e.g., SDO, SCO, SRO, Language Content
-            object, or a Marking Definition object).
           items:
-            $ref: '#/components/schemas/Map<String,Object>'
+            $ref: '#/components/schemas/StixObject'
       description: The envelope is a simple wrapper for STIX 2 content. When returning
         STIX 2 content in a TAXII response the HTTP root object payload ​MUST​ be
         an ​envelope​. This specification does not define any other form of content
@@ -950,8 +984,7 @@ components:
         versions:
           type: array
           items:
-            type: integer
-            format: int64
+            $ref: '#/components/schemas/Timestamp'
       description: The ​versions​ resource is a simple wrapper around a list of versions.
     discovery:
       type: object
@@ -967,7 +1000,7 @@ components:
         default:
           type: string
           nullable: true
-        apiRoots:
+        api_roots:
           type: array
           nullable: true
           items:
