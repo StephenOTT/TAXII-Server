@@ -18,9 +18,10 @@ data class Envelop(
         val next: String? = null,
 
         //@TODO review ArraySchema usage as it is not working as expected
-        @ArraySchema(
+        @field:ArraySchema(
                 arraySchema = Schema(description = "This property contains one or more STIX Objects. Objects in this list MUST be a STIX Object (e.g., SDO, SCO, SRO, Language Content object, or a Marking Definition object)."),
-                uniqueItems = true)
+                uniqueItems = true
+        )
         val objects: List<StixObject> = listOf()
 ) : TaxiiDomain {
     init {

@@ -87,14 +87,15 @@ open class RootsController() {
             summary = "Get information about a specific API Root",
             description = "This Endpoint provides general information about an API Root, which can be used to help users and clients decide whether and how they want to interact with it. Multiple API Roots \u200BMAY\u200B be hosted on a single TAXII Server. Often, an API Root represents a single trust group.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root")
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = ApiRoot::class))]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = ApiRoot::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to this resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -127,14 +128,15 @@ open class RootsController() {
             description = "This Endpoint provides information about the status of a previous request. In TAXII 2.1, the only request that can be monitored is one to add objects to a Collection. It is typically used by TAXII Clients to monitor a POST request that they made in order to take action when it is complete.",
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = "statusId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the status message being requested")
+                Parameter(name = "statusId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the status message being requested"),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Status::class))]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Status::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to this resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -170,14 +172,15 @@ open class RootsController() {
             summary = "Get information about all collections",
             description = "This Endpoint provides information about the Collections hosted under this API Root. This is similar to the response to get a Collection, but rather than providing information about one Collection it provides information about all of the Collections. Most importantly, it provides the Collection's \u200Bid\u200B, which is used to request objects or manifest entries from the Collection.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root")
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Collections::class))]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Collections::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to this collections resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -211,14 +214,15 @@ open class RootsController() {
             description = "This Endpoint provides general information about a Collection, which can be used to help users and clients decide whether and how they want to interact with it. For example, it will tell clients what it's called and what permissions they have to it.",
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested")
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
             ]
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Collections::class))]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Collections::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to this collections resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -263,7 +267,8 @@ open class RootsController() {
                 Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
                 Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
                 Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -273,6 +278,7 @@ open class RootsController() {
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Manifest::class))],
                     headers = [
+                        Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}"),
                         Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
                         Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
@@ -325,11 +331,13 @@ open class RootsController() {
             Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
             Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
                     headers = [
+                        Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}"),
                         Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
                         Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
@@ -373,10 +381,12 @@ open class RootsController() {
     )
     @Parameters(
             Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested")
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"])),
+            Parameter(name = Headers.CONTENT_TYPE, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
     )
     @ApiResponses(
-            ApiResponse(responseCode = "202", description = "The request was successful accepted", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))]),
+            ApiResponse(responseCode = "202", description = "The request was successful accepted", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to write to this objects resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -426,11 +436,13 @@ open class RootsController() {
             Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
             Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
                     headers = [
+                        Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}"),
                         Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
                         Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]
@@ -479,10 +491,11 @@ open class RootsController() {
             Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
             Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted"),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client has access to the object, but not to delete it", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -529,11 +542,13 @@ open class RootsController() {
             Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
             Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
             Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "...")
+            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Versions::class))],
                     headers = [
+                        Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}"),
                         Header(name = Headers.X_TAXII_DATE_ADDED_FIRST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class)),
                         Header(name = Headers.X_TAXII_DATE_ADDED_LAST, required = true, description = "timestamp", schema = Schema(implementation = Timestamp::class))
                     ]

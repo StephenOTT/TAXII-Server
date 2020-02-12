@@ -2,6 +2,7 @@ package com.github.stephenott.stix.taxii.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
+import com.github.stephenott.stix.taxii.domain.types.Identifier
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -9,7 +10,8 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class Collections(
 
         @field:ArraySchema(
-                arraySchema = Schema(description = "A list of Collections. If there are no Collections in the list, this key ​MUST​ be omitted, and the response is an empty object. The ​collection​ resource is defined in section ​5.2.1​.")
+                arraySchema = Schema(description = "A list of Collections. If there are no Collections in the list, this key ​MUST​ be omitted, and the response is an empty object. The ​collection​ resource is defined in section ​5.2.1​."),
+                uniqueItems = true
         )
         val collections: List<Collection> = listOf() //@TODO must return a empoty object when empty list
 ): TaxiiDomain {}
@@ -18,7 +20,7 @@ data class Collections(
 data class Collection(
 
         @field:Schema(description = "The ​id​ property universally and uniquely identifies this Collection. It is used in the Get Collection Endpoint (see section​ ​5.2​) as the ​{id}​ parameter to retrieve the Collection.")
-        val id: String, //@TODO Identifier
+        val id: Identifier, //@TODO Identifier
 
         @field:Schema(description = "A human readable plain text title used to identify this Collection.")
         val title: String,

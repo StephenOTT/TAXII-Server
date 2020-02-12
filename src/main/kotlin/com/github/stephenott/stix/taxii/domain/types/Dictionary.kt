@@ -4,10 +4,9 @@ import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import io.swagger.v3.oas.annotations.media.Schema
 
-//@TODO need to move to a model converter
-@Schema(name = "stix-object", description = "A STIX Object")
-data class StixObject(
+@Schema(description = "TAXII Dictionary", type = "object")
+data class Dictionary(
         @JsonAnySetter
         @get:JsonAnyGetter
-        val stixObject: Map<String, Any> = mutableMapOf() //@TODO mapof()
+        val dictionary: Map<String, Any> = mutableMapOf() //@TODO mapof()
 )

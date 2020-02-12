@@ -24,9 +24,18 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -81,9 +90,18 @@ paths:
         in: path
         description: the ​identifier​ of the status message being requested
         required: true
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -135,9 +153,18 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -192,9 +219,18 @@ paths:
         in: path
         description: the ​identifier​ of the Collection being requested
         required: true
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -278,10 +314,18 @@ paths:
         in: query
         description: the specification version(s)
         example: '...'
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
           headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -351,6 +395,9 @@ paths:
         200:
           description: The request was successful
           headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -422,6 +469,10 @@ paths:
       responses:
         202:
           description: The request was successful accepted
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -510,6 +561,9 @@ paths:
         200:
           description: The request was successful
           headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -582,6 +636,10 @@ paths:
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1: {}
         400:
@@ -646,6 +704,9 @@ paths:
         200:
           description: The request was successful
           headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -700,10 +761,19 @@ paths:
         including the advertised API Roots. It's a common entry point for TAXII Clients
         into the data and services provided by a TAXII Server.
       operationId: discovery
-      parameters: []
+      parameters:
+      - name: Accept
+        in: header
+        required: true
+        schema:
+          type: string
       responses:
         200:
           description: The request was successful
+          headers:
+            Content-Type:
+              description: Always value of application/taxii+json;version=2.1
+              required: true
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -779,6 +849,13 @@ components:
         API Root, such as a human-readable title​ and ​description​, the TAXII ​versions​
         it supports, and the maximum size (​max_content_length​) of the content body
         it will accept in a PUT or POST request.
+    Dictionary:
+      type: object
+      properties:
+        dictionary:
+          type: object
+          additionalProperties: true
+      description: TAXII Dictionary
     error:
       type: object
       properties:
@@ -816,12 +893,7 @@ components:
             details.
           nullable: true
         details:
-          type: object
-          additionalProperties: true
-          description: The details property captures additional server-specific details
-            about the error. The keys and values are determined by the TAXII Server
-            and ​MAY be any valid JSON object structure.
-          nullable: true
+          $ref: '#/components/schemas/Dictionary'
       description: The ​error​ message is provided by TAXII Servers in the response
         body when returning an HTTP error status and contains more information describing
         the error, including a human-readable ​title​ and description​, an ​error_code​
@@ -829,6 +901,9 @@ components:
         about the error. All of the properties are application-specific, and clients
         shouldn't assume consistent meaning across TAXII Servers even if the codes,
         IDs, or titles are the same.
+    Identifier:
+      type: string
+      format: uuid
     RequestStatus:
       type: string
       enum:
@@ -841,11 +916,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          description: The identifier of the object that succeed, is pending, or failed
-            to be created. For STIX objects the ​id​ ​MUST​ be the STIX Object ​id​.
-            For object types that do not have their own identifier, the server ​MAY
-            ​use any value as the ​id​.
+          $ref: '#/components/schemas/Identifier'
         version:
           $ref: '#/components/schemas/Timestamp'
         message:
@@ -860,8 +931,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          description: The ​identifier​ of this Status resource.
+          $ref: '#/components/schemas/Identifier'
         status:
           $ref: '#/components/schemas/RequestStatus'
         request_timestamp:
@@ -919,10 +989,7 @@ components:
       type: object
       properties:
         id:
-          type: string
-          description: The ​id​ property universally and uniquely identifies this
-            Collection. It is used in the Get Collection Endpoint (see section​ ​5.2​)
-            as the ​{id}​ parameter to retrieve the Collection.
+          $ref: '#/components/schemas/Identifier'
         title:
           type: string
           description: A human readable plain text title used to identify this Collection.
@@ -984,7 +1051,7 @@ components:
       type: object
       properties:
         id:
-          type: string
+          $ref: '#/components/schemas/Identifier'
         date_added:
           $ref: '#/components/schemas/Timestamp'
         version:
@@ -1001,6 +1068,9 @@ components:
       properties:
         more:
           type: boolean
+          description: This property identifies if there is more content available
+            based on the search criteria. The absence of this property means the value
+            is false​.
         objects:
           type: array
           items:
@@ -1041,6 +1111,9 @@ components:
       properties:
         more:
           type: boolean
+          description: This property identifies if there is more content available
+            based on the search criteria. The absence of this property means the value
+            is false​.
           nullable: true
         versions:
           type: array
@@ -1052,17 +1125,26 @@ components:
       properties:
         title:
           type: string
+          description: A human readable plain text name used to identify this server.
         description:
           type: string
+          description: A human readable plain text description for this server.
           nullable: true
         contact:
           type: string
+          description: The human readable plain text contact information for this
+            server and/or the administrator of this server.
           nullable: true
         default:
           type: string
           nullable: true
         api_roots:
           type: array
+          description: A list of URLs that identify known API Roots. This list MAY​
+            be filtered on a per-client basis.  API Root URLs ​MUST​ be HTTPS absolute
+            URLs or relative URLs. API Root relative URLs ​MUST​ begin with a single
+            "/" character and ​MUST​ N​ OT​ begin with "//" or "../". API Root URLs
+            ​MUST NOT​ contain a URL query component.
           nullable: true
           items:
             type: string

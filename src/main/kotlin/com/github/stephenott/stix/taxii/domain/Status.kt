@@ -1,6 +1,7 @@
 package com.github.stephenott.stix.taxii.domain
 
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.github.stephenott.stix.taxii.domain.types.Identifier
 import com.github.stephenott.stix.taxii.domain.types.Timestamp
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -9,7 +10,7 @@ import io.swagger.v3.oas.annotations.media.Schema
 data class Status(
 
         @field:Schema(description = "The ​identifier​ of this Status resource.")
-        val id: String, //@TODO Identifier
+        val id: Identifier,
 
         @field:Schema(description = "The overall status of a previous POST request where an HTTP 202 (Accept) was returned. The value of this property ​MUST​ be one of ​complete or ​pending​. A value of ​complete​ indicates that this resource will not be updated further, and MAY​ be removed in the future. A status of pending​ indicates that this resource ​MAY​ be updated in the future.")
         val status: RequestStatus,
@@ -55,7 +56,7 @@ data class Status(
 data class StatusDetails(
 
         @field:Schema(description = "The identifier of the object that succeed, is pending, or failed to be created. For STIX objects the ​id​ ​MUST​ be the STIX Object ​id​. For object types that do not have their own identifier, the server ​MAY ​use any value as the ​id​.")
-        val id: String, //@TODO Identifier
+        val id: Identifier,
 
         @field:Schema(description = "The version of the object that succeeded, is pending, or failed to be created. For STIX objects the version ​MUST​ be the STIX modified timestamp Property. If a STIX object is not versioned (and therefore does not have a modified timestamp), the server ​MUST ​use the created​ timestamp. If the STIX object does not have a ​created​ or ​modified​ timestamp then the server ​SHOULD​ use a value for the version that is consistent to the server.")
         val version: Timestamp,
