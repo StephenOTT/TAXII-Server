@@ -61,7 +61,12 @@ open class DiscoveryController() {
                 SecurityRequirement(name = "basicAuth")
             ],
             parameters = [
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = ["TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1"]))
+                Parameter(name = Headers.ACCEPT,
+                        `in` = ParameterIn.HEADER,
+                        required = true,
+                        schema = Schema(type = "string",
+                                allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII],
+                                defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
     )
     @ApiResponses(
@@ -74,7 +79,10 @@ open class DiscoveryController() {
     )
     open fun discovery(principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Discovery>> {
         return Single.fromCallable {
-            discoveryProvider.execute(ProviderRequest(mapOf(), request))
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+
+            discoveryProvider.execute(ProviderRequest(mapOf(), contentType.toString(), acceptType.toString(), request))
         }.onErrorResumeNext {
             if (it is TaxiiException) {
                 Single.error(it)

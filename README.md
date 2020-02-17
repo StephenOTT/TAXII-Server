@@ -16,12 +16,25 @@ Download the jar from [releases](https://github.com/StephenOTT/TAXII-Server/rele
 
 Then run: `java -jar taxii-server-micronaut-0.5-all.jar`
 
+## Default Basic Auth
+
+**Username**: `sherlock`
+
+**Password**: `password`
+
 
 # Docker
 
 1. Go to project
 1. Run `docker build -t taxii-server .`
 3. Run `docker run -p 8080:8080 --name taxii taxii-server`
+
+# Defaults
+
+## Headers
+
+1. `Content-Type`: if not provided, will default to `application/taxii+json;version=2.1`
+1. `Accept`: if not provided, will default to `application/taxii+json;version=2.1`
 
 
 # OpenAPI / Swagger file

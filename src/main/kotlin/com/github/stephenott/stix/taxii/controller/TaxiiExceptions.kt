@@ -5,7 +5,7 @@ import com.github.stephenott.stix.taxii.domain.Error
 /**
  * Generic TaxiiException
  */
-open class TaxiiException(val taxiError: Error): RuntimeException(){}
+open class TaxiiException(val taxiError: Error): RuntimeException(taxiError.title){}
 
 
 class RequestException(httpStatus: String, taxiError: Error = Error(
@@ -42,8 +42,8 @@ class AccessOrNotFoundException(httpStatus: String, taxiError: Error = Error(
 )): TaxiiException(taxiError){}
 
 
-class MediaTypeException(httpStatus: String, taxiError: Error = Error(
-        title = "The Media Type provided is invalid",
+class MediaTypeException(httpStatus: String, forHeader: String, taxiError: Error = Error(
+        title = "The Media Type provided is invalid for header $forHeader",
         httpStatus = httpStatus
 )): TaxiiException(taxiError){}
 

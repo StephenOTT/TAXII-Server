@@ -833,6 +833,11 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
+        someLong:
+          type: array
+          items:
+            type: integer
+            format: int64
         max_content_length:
           type: integer
           description: The maximum size of the request body in octets (8-bit bytes)

@@ -2,6 +2,7 @@ package com.github.stephenott.stix.taxii.controller
 
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import io.micronaut.http.HttpHeaders
 import io.micronaut.http.annotation.Header
 
 class Headers(

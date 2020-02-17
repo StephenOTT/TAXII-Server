@@ -7,6 +7,8 @@ import java.time.Instant
 @Schema(type = "string", format = "date-time")
 data class Timestamp (val instant: Instant
 ){
+    constructor(timestamp: String):this(Instant.parse(timestamp))
+
     @JsonGetter
     fun getTimestampAsString(): String{
         return instant.toString()

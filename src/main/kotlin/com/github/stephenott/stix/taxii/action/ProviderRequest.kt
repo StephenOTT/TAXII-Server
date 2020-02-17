@@ -14,6 +14,8 @@ data class ProviderRequest<T> (
         val requestBody: T?,
         val parameters: HttpParameters,
         val cookies: Cookies,
+        val contentType: String,
+        val acceptType: String,
         val headers: HttpHeaders,
         val httpMethod: HttpMethod,
         val path: String,
@@ -22,12 +24,14 @@ data class ProviderRequest<T> (
         val isSecure: Boolean,
         val principal: Principal?
 ){
-    constructor(pathParameters: Map<String, String>, request: HttpRequest<T>):this(
+    constructor(pathParameters: Map<String, String>, contentType: String, acceptType: String, request: HttpRequest<T>):this(
             pathParameters = pathParameters,
             requestBody = request.body.takeIf { it.isPresent }?.get(),
             parameters = request.parameters,
             cookies = request.cookies,
             headers = request.headers,
+            contentType = contentType,
+            acceptType = acceptType,
             httpMethod = request.method,
             path = request.path,
             remoteAddress = request.remoteAddress,
