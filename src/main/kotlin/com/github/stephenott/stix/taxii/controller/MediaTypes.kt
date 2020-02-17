@@ -18,7 +18,7 @@ interface TaxiiMediaType{
 
         val taxii_2_1: TaxiiMediaType = TaxiiMedia(TAXII_VERSION_2_1)
         val taxii_2_0: TaxiiMediaType = TaxiiMedia(TAXII_VERSION_2_0)
-        val wildCardMediaType: TaxiiMediaType = TaxiiMedia("*/*", true)
+        val wildCardMediaType: TaxiiMediaType = TaxiiMedia(MediaType.ALL, true)
 
         /**
          * If rawValue does not contain a version then will default to TAXII 2.1 version
