@@ -64,6 +64,8 @@ The ReDoc viewer will load any theme and js dependencies CDNs.
 
 Assemble with ReDoc files: (will not require the below when fixed: https://github.com/micronaut-projects/micronaut-openapi/issues/108)
 
-`JAVA_TOOL_OPTIONS=-Dmicronaut.openapi.views.spec=redoc.enabled=true ./gradlew --no-daemon clean assemble`
+ReDoc viewer only:`JAVA_TOOL_OPTIONS=-Dmicronaut.openapi.views.spec=redoc.enabled=true ./gradlew --no-daemon clean assemble`
+
+Full set of viewers: `JAVA_TOOL_OPTIONS=-Dmicronaut.openapi.views.spec=redoc.enabled=true,rapidoc.enabled=true,swagger-ui.enabled=true,swagger-ui.theme=flattop ./gradlew --no-daemon clean assemble`
 
 **Note:** Internet is required for the viewers to download and load through the CDNs
