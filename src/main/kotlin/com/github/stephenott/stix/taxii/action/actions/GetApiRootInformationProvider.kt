@@ -13,7 +13,7 @@ import javax.inject.Inject
 import javax.inject.Singleton
 
 @Singleton
-class GetApiRootInformationProvider: Action<Unit, ApiRoot> {
+class GetApiRootInformationProvider : Action<Unit, ApiRoot> {
 
     private val log: Logger = LoggerFactory.getLogger(GetApiRootInformationProvider::class.java)
 
@@ -26,11 +26,14 @@ class GetApiRootInformationProvider: Action<Unit, ApiRoot> {
             log.debug(mapper.writeValueAsString(providerRequest))
         }
 
-        return ProviderResponse(ApiRoot(
-                title = "default-root-1",
-                description = "this is the default root 1",
-                versions = listOf(TaxiiMediaType.taxii_2_1),
-                maxContentLength = 104857600 //100mb: 100*1024*1024
-        ))
+        return ProviderResponse(
+                ApiRoot(
+                        title = "default-root-1",
+                        description = "this is the default root 1",
+                        versions = listOf(TaxiiMediaType.taxii_2_1),
+                        maxContentLength = 104857600 //100mb: 100*1024*1024
+                ),
+                providerRequest.acceptType
+        )
     }
 }

@@ -1,11 +1,13 @@
 package com.github.stephenott.stix.taxii.action
 
+import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpResponse
 import io.micronaut.http.MutableHttpResponse
 
 data class ProviderResponse<T>(
         val responseBody: T,
+        val contentType: TaxiiMediaType,
         val additionalHeaders: HttpHeaders? = null
 )
 

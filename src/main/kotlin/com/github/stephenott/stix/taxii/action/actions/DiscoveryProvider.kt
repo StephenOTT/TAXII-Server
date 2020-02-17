@@ -36,7 +36,8 @@ class DiscoveryProvider : Action<Unit, Discovery> {
                                 "/root2",
                                 "/root3"
                         )
-                )
+                ),
+                providerRequest.acceptType
         )
     }
 }

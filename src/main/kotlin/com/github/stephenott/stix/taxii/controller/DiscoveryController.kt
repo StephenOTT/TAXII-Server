@@ -39,7 +39,7 @@ import javax.inject.Inject
                 type = SecuritySchemeType.HTTP,
                 name = "basicAuth",
                 description = "Basic Authentication",
-                scheme = "Authorization"
+                scheme = "basic"
         )
 )
 open class DiscoveryController() {
@@ -61,10 +61,7 @@ open class DiscoveryController() {
                 SecurityRequirement(name = "basicAuth")
             ],
             parameters = [
-                Parameter(name = Headers.ACCEPT,
-                        `in` = ParameterIn.HEADER,
-                        required = true,
-                        schema = Schema(type = "string",
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string",
                                 allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII],
                                 defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
@@ -79,10 +76,10 @@ open class DiscoveryController() {
     )
     open fun discovery(principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Discovery>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
-            discoveryProvider.execute(ProviderRequest(mapOf(), contentType.toString(), acceptType.toString(), request))
+            discoveryProvider.execute(ProviderRequest(mapOf(), contentType, acceptType, request))
         }.onErrorResumeNext {
             if (it is TaxiiException) {
                 Single.error(it)

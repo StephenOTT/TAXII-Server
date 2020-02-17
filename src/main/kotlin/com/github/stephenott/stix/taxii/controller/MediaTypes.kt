@@ -8,7 +8,7 @@ import java.nio.charset.Charset
 import java.util.*
 
 @Schema(name = "TaxiiMediaType", type = "string", format = "taxii-media-type", description = "A Media Type that is for TAXII content such as application/taxii+json;version=2.1", example = "application/taxii+json;version=2.1")
-interface TaxiiMediaType{
+interface TaxiiMediaType {
     companion object {
         const val APPLCATION_JSON_TAXII: String = "application/taxii+json"
         const val TAXII_VERSION_2_0: String = "2.0"
@@ -20,15 +20,29 @@ interface TaxiiMediaType{
         val taxii_2_0: TaxiiMediaType = TaxiiMedia(TAXII_VERSION_2_0)
         val wildCardMediaType: TaxiiMediaType = TaxiiMedia(MediaType.ALL, true)
 
+        fun validationAcceptTaxiiMediaType(rawMediaTypes: List<MediaType>): TaxiiMediaType {
+            //@TODO refactor
+            val rawMediaType = rawMediaTypes.find { mediaType ->
+                val taxiiType = kotlin.runCatching { validateTaxiiMediaType(mediaType.toString()) }.getOrNull()
+                taxiiType != null
+            }
+            return validateTaxiiMediaType(rawMediaType.toString())
+        }
+
+        @Throws(IllegalArgumentException::class)
+        fun validateContentTypeTaxiiMediaType(rawMediaType: MediaType?): TaxiiMediaType {
+            return validateTaxiiMediaType(rawMediaType?.toString())
+        }
+
         /**
          * If rawValue does not contain a version then will default to TAXII 2.1 version
          */
         @Throws(IllegalArgumentException::class)
-        fun validateTaxiiMediaType(rawValue: String?): TaxiiMediaType{
-            return if (rawValue != null){
+        fun validateTaxiiMediaType(rawValue: String?): TaxiiMediaType {
+            return if (rawValue != null) {
                 val rawMediaType = TaxiiMedia(rawValue, true)
 
-                if (rawMediaType == wildCardMediaType){
+                if (rawMediaType == wildCardMediaType) {
                     TaxiiMediaType.taxii_2_1
 
                 } else {
@@ -38,10 +52,16 @@ interface TaxiiMediaType{
                     //@TODO review is lowercase of values is required
                     require(rawMediaType.name == defaultTaxiiMediaType.name,
                             lazyMessage = { "Is not a supported Taxii Media Content Type name" })
-                    require(rawMediaType.version in supportedMediaTypes.map { (it as TaxiiMedia).version },
-                            lazyMessage = { "Not a supported TAXII Version" }) //@TODO make configurable to configure if default is supported or client must submit a version
 
-                    TaxiiMediaType.taxii_2_1
+                    return if (rawMediaType.version == null) {
+                        taxii_2_1
+
+                    } else {
+                        require(rawMediaType.version in supportedMediaTypes.map { (it as TaxiiMedia).version },
+                                lazyMessage = { "Not a supported TAXII Version" }) //@TODO make configurable to configure if default is supported or client must submit a version
+
+                        TaxiiMedia(rawMediaType.toString(), false)
+                    }
                 }
             } else {
                 TaxiiMediaType.taxii_2_1
@@ -50,10 +70,11 @@ interface TaxiiMediaType{
 
     }
 }
-class TaxiiMedia(rawText: String, isRaw: Boolean): MediaType(rawText),
+
+class TaxiiMedia(rawText: String, isRaw: Boolean) : MediaType(rawText),
         TaxiiMediaType {
 
-    constructor(version: String):this("${TaxiiMediaType.APPLCATION_JSON_TAXII};version=${version}", false)
+    constructor(version: String) : this("${TaxiiMediaType.APPLCATION_JSON_TAXII};version=${version}", false)
 
     override fun hashCode(): Int {
         return super<MediaType>.hashCode()
@@ -99,11 +120,8 @@ class TaxiiMedia(rawText: String, isRaw: Boolean): MediaType(rawText),
         return super.getQuality()
     }
 
-    /**
-     * Returns 2.1 as the default if null/not present
-     */
-    override fun getVersion(): String {
-        return parameters.getOrDefault("version", TaxiiMediaType.TAXII_VERSION_2_1 )
+    override fun getVersion(): String? {
+        return parameters.getOrDefault("version", null)
     }
 
     override fun get(index: Int): Char {
@@ -123,8 +141,8 @@ class TaxiiMedia(rawText: String, isRaw: Boolean): MediaType(rawText),
 }
 
 @Schema(name = "StixMediaType", type = "string", format = "stix-media-type", description = "A Media Type that is for STIX content such as application/stix+json;version=2.1", example = "application/stix+json;version=2.1")
-interface StixMediaType{
-    companion object{
+interface StixMediaType {
+    companion object {
         const val APPLCATION_JSON_STIX: String = "application/stix+json"
         const val STIX_VERSION_2_0: String = "2.0"
         const val STIX_VERSION_2_1: String = "2.1"
@@ -135,9 +153,10 @@ interface StixMediaType{
         val stix_2_0: StixMediaType = StixMedia(STIX_VERSION_2_0)
     }
 }
-class StixMedia(version: String):
+
+class StixMedia(version: String) :
         MediaType("${TaxiiMediaType.APPLCATION_JSON_TAXII};version=${version}"),
-        StixMediaType{
+        StixMediaType {
 
     override fun hashCode(): Int {
         return super<MediaType>.hashCode()

@@ -41,7 +41,7 @@ import javax.inject.Inject
                 type = SecuritySchemeType.HTTP,
                 name = "basicAuth",
                 description = "Basic Authentication",
-                scheme = "Authorization"
+                scheme = "basic"
         )
 )
 open class RootsController() {
@@ -87,8 +87,8 @@ open class RootsController() {
             summary = "Get information about a specific API Root",
             description = "This Endpoint provides general information about an API Root, which can be used to help users and clients decide whether and how they want to interact with it. Multiple API Roots \u200BMAY\u200B be hosted on a single TAXII Server. Often, an API Root represents a single trust group.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -104,13 +104,13 @@ open class RootsController() {
     )
     open fun getApiRoot(apiRoot: String, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<ApiRoot>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getApiRootInformationProvider.execute(ProviderRequest(
                     mapOf(Pair("apiRoot", apiRoot)),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -122,6 +122,7 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
@@ -132,9 +133,9 @@ open class RootsController() {
             summary = "Get status information for a specific status ID",
             description = "This Endpoint provides information about the status of a previous request. In TAXII 2.1, the only request that can be monitored is one to add objects to a Collection. It is typically used by TAXII Clients to monitor a POST request that they made in order to take action when it is complete.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = "statusId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the status message being requested"),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "statusId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the status message being requested", schema = Schema(type = "string")),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -150,16 +151,16 @@ open class RootsController() {
     )
     open fun getStatus(apiRoot: String, statusId: String, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Status>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getStatusProvider.execute(ProviderRequest(
                     mapOf(
                             Pair("apiRoot", apiRoot),
                             Pair("statusId", statusId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -171,19 +172,20 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
 
-    @Get(value = "/collections", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Operation(
             summary = "Get information about all collections",
             description = "This Endpoint provides information about the Collections hosted under this API Root. This is similar to the response to get a Collection, but rather than providing information about one Collection it provides information about all of the Collections. Most importantly, it provides the Collection's \u200Bid\u200B, which is used to request objects or manifest entries from the Collection.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -199,13 +201,13 @@ open class RootsController() {
     )
     open fun getCollections(apiRoot: String, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Collections>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionsProvider.execute(ProviderRequest(
                     mapOf(Pair("apiRoot", apiRoot)),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -217,20 +219,21 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
 
-    @Get(value = "/collections/{collectionId}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections/{collectionId}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Operation(
             summary = "Get information about a specific collection",
             description = "This Endpoint provides general information about a Collection, which can be used to help users and clients decide whether and how they want to interact with it. For example, it will tell clients what it's called and what permissions they have to it.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -246,16 +249,16 @@ open class RootsController() {
     )
     open fun getCollection(apiRoot: String, collectionId: String, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Collection>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionProvider.execute(ProviderRequest(
                     mapOf(
                             Pair("apiRoot", apiRoot),
                             Pair("collectionId", collectionId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -267,20 +270,21 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
 
-    @Get(value = "/collections/{collectionId}/manifest{?qParams*}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections/{collectionId}/manifest{?qParams*}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @ExplosionTarget(["match"])
     @Operation(
             summary = "Get manifest information about the contents of a specific collection",
             description = "This Endpoint retrieves a manifest about the objects in a Collection. It supports filtering identical to the get objects Endpoint but rather than returning the object itself it returns metadata about the object. It can be used to retrieve metadata to decide whether it's worth retrieving the actual objects.",
             parameters = [
-                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
                 Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
                 Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
                 Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
@@ -288,7 +292,7 @@ open class RootsController() {
                 Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
                 Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
                 Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
                 SecurityRequirement(name = "basicAuth")
@@ -311,16 +315,16 @@ open class RootsController() {
     )
     open fun getCollectionManifest(apiRoot: String, collectionId: String, @QueryValueExploded qParams: Map<String, Any>?, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Manifest>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionManifestProvider.execute(ProviderRequest(
                     mapOf(
                             Pair("apiRoot", apiRoot),
                             Pair("collectionId", collectionId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -332,12 +336,13 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
 
-    @Get(value = "/collections/{collectionId}/objects{?qParams*}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections/{collectionId}/objects{?qParams*}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @ExplosionTarget(["match"])
     @Operation(
@@ -348,8 +353,8 @@ open class RootsController() {
             ]
     )
     @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
+            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
             Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
             Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
             Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
@@ -357,7 +362,7 @@ open class RootsController() {
             Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
             Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
@@ -375,16 +380,16 @@ open class RootsController() {
     )
     open fun getCollectionObjects(apiRoot: String, collectionId: String, @QueryValueExploded qParams: Map<String, Any>?, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Envelop>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionObjectsProvider.execute(ProviderRequest(
                     mapOf(
                             Pair("apiRoot", apiRoot),
                             Pair("collectionId", collectionId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -396,11 +401,12 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
-    @Post(value = "/collections/{collectionId}/objects", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Post(value = "/collections/{collectionId}/objects")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @Operation(
             summary = "Add a new object to a specific collection",
@@ -410,10 +416,10 @@ open class RootsController() {
             ]
     )
     @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
-            Parameter(name = Headers.CONTENT_TYPE, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
+            Parameter(name = Headers.CONTENT_TYPE, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "202", description = "The request was successful accepted", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
@@ -428,16 +434,16 @@ open class RootsController() {
     )
     open fun addCollectionObjects(apiRoot: String, collectionId: String, @Body envelop: Envelop, principal: Principal?, request: HttpRequest<Envelop>): Single<HttpResponse<Status>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             addCollectionObjectsProvider.execute(ProviderRequest(
                     mapOf(
                             Pair("apiRoot", apiRoot),
                             Pair("collectionId", collectionId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -449,11 +455,12 @@ open class RootsController() {
 
         }.map {
             HttpResponse.status<Status>(HttpStatus.ACCEPTED).body(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
-    @Get(value = "/collections/{collectionId}/objects/{objectId}{?qParams*}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections/{collectionId}/objects/{objectId}{?qParams*}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @ExplosionTarget(["match"])
     @Operation(
@@ -464,15 +471,15 @@ open class RootsController() {
             ]
     )
     @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested"),
+            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
             Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
             Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
             Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
             Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
@@ -490,8 +497,8 @@ open class RootsController() {
     )
     open fun getCollectionObject(apiRoot: String, collectionId: String, objectId: String, @QueryValueExploded qParams: Map<String, Any>?, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Envelop>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionObjectProvider.execute(ProviderRequest(
                     mapOf(
@@ -499,8 +506,8 @@ open class RootsController() {
                             Pair("collectionId", collectionId),
                             Pair("objectId", objectId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -512,11 +519,12 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
-    @Delete(value = "/collections/{collectionId}/objects/{objectId}{?qParams}}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Delete(value = "/collections/{collectionId}/objects/{objectId}{?qParams}}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @ExplosionTarget(["match"])
     @Operation(
@@ -527,15 +535,15 @@ open class RootsController() {
             ]
     )
     @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted"),
+            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted", schema = Schema(type = "string")),
             Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
             Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client has access to the object, but not to delete it", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
@@ -544,8 +552,8 @@ open class RootsController() {
     )
     open fun deleteCollectionObject(apiRoot: String, collectionId: String, objectId: String, @QueryValueExploded qParams: Map<String, Any>?, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Unit>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             deleteCollectionObjectProvider.execute(ProviderRequest(
                     mapOf(
@@ -553,8 +561,8 @@ open class RootsController() {
                             Pair("collectionId", collectionId),
                             Pair("objectId", objectId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -566,11 +574,12 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
 
-    @Get(value = "/collections/{collectionId}/objects/{objectId}/versions{?qParams*}", processes = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1])
+    @Get(value = "/collections/{collectionId}/objects/{objectId}/versions{?qParams*}")
     @Secured(SecurityRule.IS_AUTHENTICATED)
     @ExplosionTarget(["match"])
     @Operation(
@@ -581,14 +590,14 @@ open class RootsController() {
             ]
     )
     @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root"),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested"),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested"),
+            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
             Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
             Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
             Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
             Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = true, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
+            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Versions::class))],
@@ -606,8 +615,8 @@ open class RootsController() {
     )
     open fun getCollectionObjectVersions(apiRoot: String, collectionId: String, objectId: String, @QueryValueExploded qParams: Map<String, Any>?, principal: Principal?, request: HttpRequest<Unit>): Single<HttpResponse<Versions>> {
         return Single.fromCallable {
-            val contentType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.CONTENT_TYPE).orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
-            val acceptType = kotlin.runCatching { TaxiiMediaType.validateTaxiiMediaType(request.headers.findFirst(Headers.ACCEPT).orElse(null)) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
+            val contentType = kotlin.runCatching { TaxiiMediaType.validateContentTypeTaxiiMediaType(request.headers.contentType().orElse(null)) }.getOrElse { throw MediaTypeException("415", Headers.CONTENT_TYPE) }
+            val acceptType = kotlin.runCatching { TaxiiMediaType.validationAcceptTaxiiMediaType(request.headers.accept()) }.getOrElse { throw MediaTypeException("406", Headers.ACCEPT) }
 
             getCollectionObjectVersionsProvider.execute(ProviderRequest(
                     mapOf(
@@ -615,8 +624,8 @@ open class RootsController() {
                             Pair("collectionId", collectionId),
                             Pair("objectId", objectId)
                     ),
-                    contentType.toString(),
-                    acceptType.toString(),
+                    contentType,
+                    acceptType,
                     request))
 
         }.onErrorResumeNext {
@@ -628,6 +637,7 @@ open class RootsController() {
 
         }.map {
             HttpResponse.ok(it.responseBody)
+                    .contentType(it.contentType as MediaType)
                     .addAdditionalHeaders(it.additionalHeaders)
         }
     }
