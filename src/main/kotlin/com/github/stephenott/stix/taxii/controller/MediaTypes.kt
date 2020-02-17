@@ -27,8 +27,6 @@ interface TaxiiMediaType{
         fun validateTaxiiMediaType(rawValue: String?): TaxiiMediaType{
             return if (rawValue != null){
                 val rawMediaType = TaxiiMedia(rawValue, true)
-                println(rawMediaType)
-                println(wildCardMediaType)
 
                 if (rawMediaType == wildCardMediaType){
                     TaxiiMediaType.taxii_2_1
