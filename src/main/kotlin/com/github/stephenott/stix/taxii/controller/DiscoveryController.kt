@@ -96,7 +96,9 @@ open class DiscoveryController() {
     fun taxiiException(request: HttpRequest<*>, exception: TaxiiException): HttpResponse<Error> {
         log.error("Discovery Controller Error", exception)
         requireNotNull(exception.taxiError.httpStatus)
-        return HttpResponse.status<Error>(HttpStatus.valueOf(exception.taxiError.httpStatus.toInt())).body(exception.taxiError)
+        return HttpResponse.status<Error>(HttpStatus.valueOf(exception.taxiError.httpStatus.toInt()))
+                .contentType(TaxiiMediaType.taxii_2_1 as MediaType)
+                .body(exception.taxiError)
     }
 
 }

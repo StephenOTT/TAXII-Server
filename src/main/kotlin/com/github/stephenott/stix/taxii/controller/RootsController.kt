@@ -647,7 +647,9 @@ open class RootsController() {
     fun taxiiException(request: HttpRequest<*>, exception: TaxiiException): HttpResponse<Error> {
         log.error("Roots Controller Error", exception)
         requireNotNull(exception.taxiError.httpStatus, lazyMessage = {"TAXII Exception was missing HTTP Status Code"})
-        return HttpResponse.status<Error>(HttpStatus.valueOf(exception.taxiError.httpStatus.toInt())).body(exception.taxiError)
+        return HttpResponse.status<Error>(HttpStatus.valueOf(exception.taxiError.httpStatus.toInt()))
+                .contentType(TaxiiMediaType.taxii_2_1 as MediaType)
+                .body(exception.taxiError)
     }
 
 }
