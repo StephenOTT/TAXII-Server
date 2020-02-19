@@ -9,7 +9,10 @@ import com.github.stephenott.stix.taxii.domain.Collection
 import com.github.stephenott.stix.taxii.domain.Error
 import com.github.stephenott.stix.taxii.domain.Status
 import com.github.stephenott.stix.taxii.domain.types.Timestamp
-import io.micronaut.http.*
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.*
 import io.micronaut.security.annotation.Secured
 import io.micronaut.security.rules.SecurityRule
@@ -17,7 +20,6 @@ import io.micronaut.validation.Validated
 import io.reactivex.Single
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.Parameter
-import io.swagger.v3.oas.annotations.Parameters
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.headers.Header
@@ -350,19 +352,20 @@ open class RootsController() {
             description = "This Endpoint retrieves objects from a Collection. Clients can search for objects in the Collection, retrieve all objects in a Collection, or paginate through objects in the Collection.",
             security = [
                 SecurityRequirement(name = "basicAuth")
+            ],
+            parameters = [
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
+                Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
+                Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
+                Parameter(name = "qParams", hidden = true)
             ]
-    )
-    @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-            Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-            Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-            Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-            Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
-            Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
-            Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
@@ -413,13 +416,13 @@ open class RootsController() {
             description = "This Endpoint adds objects to a Collection.",
             security = [
                 SecurityRequirement(name = "basicAuth")
+            ],
+            parameters = [
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
+                Parameter(name = Headers.CONTENT_TYPE, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
-    )
-    @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
-            Parameter(name = Headers.CONTENT_TYPE, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "202", description = "The request was successful accepted", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
@@ -468,18 +471,18 @@ open class RootsController() {
             description = "This Endpoint gets an object from a Collection by its \u200Bid\u200B. It can be thought of as a search where the match[id]\u200B parameter is set to the \u200B{object-id}\u200B in the path. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B.",
             security = [
                 SecurityRequirement(name = "basicAuth")
+            ],
+            parameters = [
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
-    )
-    @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
-            Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-            Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-            Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-            Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Envelop::class))],
@@ -532,15 +535,15 @@ open class RootsController() {
             description = "This Endpoint deletes an object from a Collection by its \u200Bid\u200B. For STIX 2 objects, the \u200B{object-id}\u200B \u200BMUST be the STIX \u200Bid\u200B.",
             security = [
                 SecurityRequirement(name = "basicAuth")
+            ],
+            parameters = [
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted", schema = Schema(type = "string")),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
-    )
-    @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted", schema = Schema(type = "string")),
-            Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)]),
@@ -587,17 +590,17 @@ open class RootsController() {
             description = "This Endpoint retrieves a list of one or more versions of an object in a Collection. This list can be used to decide whether it's worth retrieving the actual objects, or if new versions have been added. If a STIX object is not versioned (and therefore does not have a modified timestamp), the server \u200BMUST \u200Buse created\u200B timestamp.",
             security = [
                 SecurityRequirement(name = "basicAuth")
+            ],
+            parameters = [
+                Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
+                Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
+                Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
-    )
-    @Parameters(
-            Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
-            Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-            Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
-            Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-            Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-            Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-            Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-            Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
     )
     @ApiResponses(
             ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Versions::class))],
