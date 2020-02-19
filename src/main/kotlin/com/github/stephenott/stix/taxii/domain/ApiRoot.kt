@@ -16,13 +16,9 @@ data class ApiRoot(
 
         @ArraySchema(
                 arraySchema = Schema(description = "The list of TAXII versions that this API Root is compatible with. The values listed in this property ​MUST match the media types defined in Section​ 1​ .6.8.1​ and MUST​ include the optional version parameter. A value of \"​application/taxii+json;version=2.1\"​ M​UST​ be included in this list to indicate conformance with this specification."),
-//                schema = Schema(description = "a Taxii Media Type"),
-                uniqueItems = true
-        )
+                schema = Schema(description = "A Taxii Media Type"),
+                uniqueItems = true)
         val versions: List<TaxiiMediaType>, //@TODO rebuild to be proper types for versions
-
-        @get:ArraySchema(schema = Schema(name="dog", description = "dog"))
-        val someLong: List<Long> = listOf(),
 
         @JsonProperty("max_content_length")
         @field:Schema(name = "max_content_length", description = "The maximum size of the request body in octets (8-bit bytes) that the server can support. The value of the max_content_length​ ​MUST​ be a positive ​integer greater than zero. This applies to requests only and is determined by the server. Requests with total body length values smaller than this value ​MUST NOT​ result in an HTTP 413 (Request Entity Too Large) response. If for example, the server supported 100 MB of data, the value for this property would be determined by 100*1024*1024 which equals 104,857,600. This property contains useful information for the client when it POSTs requests to the Add Objects endpoint.")
