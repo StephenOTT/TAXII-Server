@@ -57,7 +57,7 @@ dependencies {
     testImplementation "io.mockk:mockk:1.9.3"
     testImplementation "io.kotlintest:kotlintest-runner-junit5:3.3.2"
 
-    kapt "io.micronaut.configuration:micronaut-openapi:1.3.4"
+    kapt "io.micronaut.configuration:micronaut-openapi:1.4.0"
     implementation "io.swagger.core.v3:swagger-annotations:2.0.10" // @TODO Review what version to use
 //    implementation "io.swagger.core.v3:swagger-core:2.0.10"
 //    implementation "io.swagger.core.v3:swagger-models:2.0.10"
