@@ -14,9 +14,8 @@ data class ApiRoot(
         @field:Schema(description = "A human readable plain text description for this API Root.")
         val description: String? = null,
 
-        @ArraySchema(
+        @field:ArraySchema(
                 arraySchema = Schema(description = "The list of TAXII versions that this API Root is compatible with. The values listed in this property ​MUST match the media types defined in Section​ 1​ .6.8.1​ and MUST​ include the optional version parameter. A value of \"​application/taxii+json;version=2.1\"​ M​UST​ be included in this list to indicate conformance with this specification."),
-                schema = Schema(description = "A Taxii Media Type"),
                 uniqueItems = true)
         val versions: List<TaxiiMediaType>, //@TODO rebuild to be proper types for versions
 
