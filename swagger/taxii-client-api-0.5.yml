@@ -424,21 +424,55 @@ paths:
       parameters:
       - name: apiRoot
         in: path
+        description: the base URL of the API Root
         required: true
         schema:
           type: string
       - name: collectionId
         in: path
+        description: the ​identifier​ of the Collection being requested
         required: true
         schema:
           type: string
-      - name: qParams
+      - name: added_after
         in: query
+        description: a single timestamp
+        example: '...'
+      - name: limit
+        in: query
+        description: a single integer
+        example: '...'
+      - name: next
+        in: query
+        description: a single string
+        example: '...'
+      - name: match[id]
+        in: query
+        description: an id(s) of an object
+        example: '...'
+      - name: match[type]
+        in: query
+        description: the type(s) of an object
+        example: '...'
+      - name: match[version]
+        in: query
+        description: the version(s) of an object
+        example: '...'
+      - name: match[spec_version]
+        in: query
+        description: the specification version(s)
+        example: '...'
+      - name: Accept
+        in: header
         required: false
         schema:
-          type: object
-          additionalProperties: true
-          nullable: true
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
+      - null
       responses:
         200:
           description: The request was successful
@@ -500,14 +534,36 @@ paths:
       parameters:
       - name: apiRoot
         in: path
+        description: the base URL of the API Root
         required: true
         schema:
           type: string
       - name: collectionId
         in: path
+        description: the ​identifier​ of the Collection being requested
         required: true
         schema:
           type: string
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
+      - name: Content-Type
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       requestBody:
         content:
           application/json:
@@ -592,26 +648,52 @@ paths:
       parameters:
       - name: apiRoot
         in: path
+        description: the base URL of the API Root
         required: true
         schema:
           type: string
       - name: collectionId
         in: path
+        description: the ​identifier​ of the Collection being requested
         required: true
         schema:
           type: string
       - name: objectId
         in: path
+        description: the ID of the object being requested
         required: true
         schema:
           type: string
-      - name: qParams
+      - name: added_after
         in: query
+        description: a single timestamp
+        example: '...'
+      - name: limit
+        in: query
+        description: a single integer
+        example: '...'
+      - name: next
+        in: query
+        description: a single string
+        example: '...'
+      - name: match[version]
+        in: query
+        description: the version(s) of an object
+        example: '...'
+      - name: match[spec_version]
+        in: query
+        description: the specification version(s)
+        example: '...'
+      - name: Accept
+        in: header
         required: false
         schema:
-          type: object
-          additionalProperties: true
-          nullable: true
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -675,19 +757,40 @@ paths:
       parameters:
       - name: apiRoot
         in: path
+        description: the base URL of the API Root
         required: true
         schema:
           type: string
       - name: collectionId
         in: path
+        description: the ​identifier​ of the Collection being requested
         required: true
         schema:
           type: string
       - name: objectId
         in: path
+        description: the ID of the object being deleted
         required: true
         schema:
           type: string
+      - name: match[version]
+        in: query
+        description: the version(s) of an object
+        example: '...'
+      - name: match[spec_version]
+        in: query
+        description: the specification version(s)
+        example: '...'
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -738,26 +841,48 @@ paths:
       parameters:
       - name: apiRoot
         in: path
+        description: the base URL of the API Root
         required: true
         schema:
           type: string
       - name: collectionId
         in: path
+        description: the ​identifier​ of the Collection being requested
         required: true
         schema:
           type: string
       - name: objectId
         in: path
+        description: the ID of the object being requested
         required: true
         schema:
           type: string
-      - name: qParams
+      - name: added_after
         in: query
+        description: a single timestamp
+        example: '...'
+      - name: limit
+        in: query
+        description: a single integer
+        example: '...'
+      - name: next
+        in: query
+        description: a single string
+        example: '...'
+      - name: match[spec_version]
+        in: query
+        description: the specification version(s)
+        example: '...'
+      - name: Accept
+        in: header
         required: false
         schema:
-          type: object
-          additionalProperties: true
-          nullable: true
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -893,7 +1018,13 @@ components:
           description: A human readable plain text description for this API Root.
           nullable: true
         versions:
+          uniqueItems: true
           type: array
+          description: The list of TAXII versions that this API Root is compatible
+            with. The values listed in this property ​MUST match the media types defined
+            in Section​ 1​ .6.8.1​ and MUST​ include the optional version parameter.
+            A value of "​application/taxii+json;version=2.1"​ M​UST​ be included in
+            this list to indicate conformance with this specification.
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
         max_content_length:
@@ -1150,10 +1281,6 @@ components:
         items.
     stix-object:
       type: object
-      properties:
-        stixObject:
-          type: object
-          additionalProperties: true
       description: A STIX Object
     envelop:
       type: object
