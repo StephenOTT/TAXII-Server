@@ -24,11 +24,18 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
-      - name: Accept
-        in: header
-        required: true
         schema:
           type: string
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -86,15 +93,24 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
+        schema:
+          type: string
       - name: statusId
         in: path
         description: the ​identifier​ of the status message being requested
         required: true
-      - name: Accept
-        in: header
-        required: true
         schema:
           type: string
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -153,11 +169,18 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
-      - name: Accept
-        in: header
-        required: true
         schema:
           type: string
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -215,15 +238,24 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
+        schema:
+          type: string
       - name: collectionId
         in: path
         description: the ​identifier​ of the Collection being requested
         required: true
-      - name: Accept
-        in: header
-        required: true
         schema:
           type: string
+      - name: Accept
+        in: header
+        required: false
+        schema:
+          type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -282,10 +314,14 @@ paths:
         in: path
         description: the base URL of the API Root
         required: true
+        schema:
+          type: string
       - name: collectionId
         in: path
         description: the ​identifier​ of the Collection being requested
         required: true
+        schema:
+          type: string
       - name: added_after
         in: query
         description: a single timestamp
@@ -316,9 +352,14 @@ paths:
         example: '...'
       - name: Accept
         in: header
-        required: true
+        required: false
         schema:
           type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -391,6 +432,13 @@ paths:
         required: true
         schema:
           type: string
+      - name: qParams
+        in: query
+        required: false
+        schema:
+          type: object
+          additionalProperties: true
+          nullable: true
       responses:
         200:
           description: The request was successful
@@ -462,7 +510,7 @@ paths:
           type: string
       requestBody:
         content:
-          application/taxii+json;version=2.1:
+          application/json:
             schema:
               $ref: '#/components/schemas/envelop'
         required: true
@@ -557,6 +605,13 @@ paths:
         required: true
         schema:
           type: string
+      - name: qParams
+        in: query
+        required: false
+        schema:
+          type: object
+          additionalProperties: true
+          nullable: true
       responses:
         200:
           description: The request was successful
@@ -636,10 +691,6 @@ paths:
       responses:
         200:
           description: The request was successful
-          headers:
-            Content-Type:
-              description: Always value of application/taxii+json;version=2.1
-              required: true
           content:
             application/taxii+json;version=2.1: {}
         400:
@@ -700,6 +751,13 @@ paths:
         required: true
         schema:
           type: string
+      - name: qParams
+        in: query
+        required: false
+        schema:
+          type: object
+          additionalProperties: true
+          nullable: true
       responses:
         200:
           description: The request was successful
@@ -764,9 +822,14 @@ paths:
       parameters:
       - name: Accept
         in: header
-        required: true
+        required: false
         schema:
           type: string
+          default: application/taxii+json;version=2.1
+          enum:
+          - application/taxii+json;version=2.1
+          - application/taxii+json;version=2.0
+          - application/taxii+json
       responses:
         200:
           description: The request was successful
@@ -833,11 +896,6 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
-        someLong:
-          type: array
-          items:
-            type: integer
-            format: int64
         max_content_length:
           type: integer
           description: The maximum size of the request body in octets (8-bit bytes)
@@ -1042,7 +1100,11 @@ components:
       type: object
       properties:
         collections:
+          uniqueItems: true
           type: array
+          description: A list of Collections. If there are no Collections in the list,
+            this key ​MUST​ be omitted, and the response is an empty object. The ​collection​
+            resource is defined in section ​5.2.1​.
           items:
             $ref: '#/components/schemas/collection'
       description: The ​collections​ resource is a simple wrapper around a list of
@@ -1077,7 +1139,11 @@ components:
             based on the search criteria. The absence of this property means the value
             is false​.
         objects:
+          uniqueItems: true
           type: array
+          description: The list of manifest entries for objects returned by the request.
+            If there are no ​manifest-record items in the list, this key ​MUST​ be
+            omitted, and the response is an empty object.
           items:
             $ref: '#/components/schemas/manifest-record'
       description: The ​manifest​ resource is a simple wrapper around a list of ​manifest-record​
@@ -1104,7 +1170,11 @@ components:
             be populated if the ​more​ property is set to ​true.​
           nullable: true
         objects:
+          uniqueItems: true
           type: array
+          description: This property contains one or more STIX Objects. Objects in
+            this list MUST be a STIX Object (e.g., SDO, SCO, SRO, Language Content
+            object, or a Marking Definition object).
           items:
             $ref: '#/components/schemas/stix-object'
       description: The envelope is a simple wrapper for STIX 2 content. When returning
@@ -1121,7 +1191,11 @@ components:
             is false​.
           nullable: true
         versions:
+          uniqueItems: true
           type: array
+          description: The list of object versions returned by the request. If there
+            are no versions returned, this key ​MUST​ be omitted, and the response
+            is an empty object.
           items:
             $ref: '#/components/schemas/Timestamp'
       description: The ​versions​ resource is a simple wrapper around a list of versions.
@@ -1162,4 +1236,4 @@ components:
     basicAuth:
       type: http
       description: Basic Authentication
-      scheme: Authorization
+      scheme: basic
