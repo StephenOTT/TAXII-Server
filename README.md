@@ -41,6 +41,12 @@ Then run: `java -jar taxii-server-micronaut-0.5-all.jar`
 
 Start the server and go to: `http://localhost:8080/swagger/taxii-client-api-0.5.yml`
 
+## Viewers
+
+1. Swagger-Ui: `http://localhost:8080/swagger-ui/index.html`
+1. ReDoc: `http://localhost:8080/redoc/index.html`
+1. RapiDoc: `http://localhost:8080/rapidoc/index.html`
+
 ## Redoc: Swagger Viewer
 
 The server provides a [ReDoc](https://github.com/Redocly/redoc) view for the OpenAPI/Swagger file
