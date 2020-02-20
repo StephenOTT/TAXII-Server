@@ -325,31 +325,46 @@ paths:
       - name: added_after
         in: query
         description: a single timestamp
-        example: '...'
+        schema:
+          type: string
       - name: limit
         in: query
         description: a single integer
-        example: '...'
+        schema:
+          type: integer
       - name: next
         in: query
         description: a single string
-        example: '...'
+        schema:
+          type: string
       - name: match[id]
         in: query
         description: an id(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[type]
         in: query
         description: the type(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[version]
         in: query
         description: the version(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[spec_version]
         in: query
         description: the specification version(s)
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: Accept
         in: header
         required: false
@@ -437,31 +452,46 @@ paths:
       - name: added_after
         in: query
         description: a single timestamp
-        example: '...'
+        schema:
+          type: string
       - name: limit
         in: query
         description: a single integer
-        example: '...'
+        schema:
+          type: integer
       - name: next
         in: query
         description: a single string
-        example: '...'
+        schema:
+          type: string
       - name: match[id]
         in: query
         description: an id(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[type]
         in: query
         description: the type(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[version]
         in: query
         description: the version(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[spec_version]
         in: query
         description: the specification version(s)
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: Accept
         in: header
         required: false
@@ -472,7 +502,6 @@ paths:
           - application/taxii+json;version=2.1
           - application/taxii+json;version=2.0
           - application/taxii+json
-      - null
       responses:
         200:
           description: The request was successful
@@ -667,23 +696,32 @@ paths:
       - name: added_after
         in: query
         description: a single timestamp
-        example: '...'
+        schema:
+          type: string
       - name: limit
         in: query
         description: a single integer
-        example: '...'
+        schema:
+          type: integer
       - name: next
         in: query
         description: a single string
-        example: '...'
+        schema:
+          type: string
       - name: match[version]
         in: query
         description: the version(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[spec_version]
         in: query
         description: the specification version(s)
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: Accept
         in: header
         required: false
@@ -776,11 +814,17 @@ paths:
       - name: match[version]
         in: query
         description: the version(s) of an object
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: match[spec_version]
         in: query
         description: the specification version(s)
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: Accept
         in: header
         required: false
@@ -860,19 +904,25 @@ paths:
       - name: added_after
         in: query
         description: a single timestamp
-        example: '...'
+        schema:
+          type: string
       - name: limit
         in: query
         description: a single integer
-        example: '...'
+        schema:
+          type: integer
       - name: next
         in: query
         description: a single string
-        example: '...'
+        schema:
+          type: string
       - name: match[spec_version]
         in: query
         description: the specification version(s)
-        example: '...'
+        schema:
+          type: array
+          items:
+            type: string
       - name: Accept
         in: header
         required: false

@@ -23,6 +23,7 @@ import io.swagger.v3.oas.annotations.Parameter
 import io.swagger.v3.oas.annotations.enums.ParameterIn
 import io.swagger.v3.oas.annotations.enums.SecuritySchemeType
 import io.swagger.v3.oas.annotations.headers.Header
+import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -287,13 +288,13 @@ open class RootsController() {
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-                Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
-                Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
-                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", schema = Schema(type = "string")),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", schema = Schema(type = "integer")),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", schema = Schema(type = "string")),
+                Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", array = ArraySchema(schema = Schema(type = "string"))),
                 Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ],
             security = [
@@ -356,15 +357,14 @@ open class RootsController() {
             parameters = [
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
-                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-                Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", example = "..."),
-                Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", example = "..."),
-                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
-                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1)),
-                Parameter(name = "qParams", hidden = true)
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", schema = Schema(type = "string")),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", schema = Schema(type = "integer")),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", schema = Schema(type = "string")),
+                Parameter(name = "match[id]", `in` = ParameterIn.QUERY, description = "an id(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[type]", `in` = ParameterIn.QUERY, description = "the type(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
     )
     @ApiResponses(
@@ -476,11 +476,11 @@ open class RootsController() {
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
                 Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
-                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", schema = Schema(type = "string")),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", schema = Schema(type = "integer")),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", schema = Schema(type = "string")),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", array = ArraySchema(schema = Schema(type = "string"))),
                 Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
     )
@@ -540,8 +540,8 @@ open class RootsController() {
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
                 Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being deleted", schema = Schema(type = "string")),
-                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = "match[version]", `in` = ParameterIn.QUERY, description = "the version(s) of an object", array = ArraySchema(schema = Schema(type = "string"))),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", array = ArraySchema(schema = Schema(type = "string"))),
                 Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
     )
@@ -595,10 +595,10 @@ open class RootsController() {
                 Parameter(name = "apiRoot", `in` = ParameterIn.PATH, required = true, description = "the base URL of the API Root", schema = Schema(type = "string")),
                 Parameter(name = "collectionId", `in` = ParameterIn.PATH, required = true, description = "the \u200Bidentifier\u200B of the Collection being requested", schema = Schema(type = "string")),
                 Parameter(name = "objectId", `in` = ParameterIn.PATH, required = true, description = "the ID of the object being requested", schema = Schema(type = "string")),
-                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", example = "..."),
-                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", example = "..."),
-                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", example = "..."),
-                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", example = "..."),
+                Parameter(name = "added_after", `in` = ParameterIn.QUERY, description = "a single timestamp", schema = Schema(type = "string")),
+                Parameter(name = "limit", `in` = ParameterIn.QUERY, description = "a single integer", schema = Schema(type = "integer")),
+                Parameter(name = "next", `in` = ParameterIn.QUERY, description = "a single string", schema = Schema(type = "string")),
+                Parameter(name = "match[spec_version]", `in` = ParameterIn.QUERY, description = "the specification version(s)", array = ArraySchema(schema = Schema(type = "string"))),
                 Parameter(name = Headers.ACCEPT, `in` = ParameterIn.HEADER, required = false, schema = Schema(type = "string", allowableValues = [TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_0, TaxiiMediaType.APPLCATION_JSON_TAXII], defaultValue = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1))
             ]
     )
