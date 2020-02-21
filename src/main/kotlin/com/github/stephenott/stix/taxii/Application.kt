@@ -12,7 +12,7 @@ import io.swagger.v3.oas.annotations.info.License
                 version = "0.5",
                 description = "TAXII Client API (2.1)",
                 license = License(name = "--", url = "http://github.com/stephenott"),
-                contact = Contact(url = "http://github.com/stephenott/TAXII-Server", name = "StephenOTT", email = "http://github.com/stephenott/TAXII-Server")
+                contact = Contact(url = "http://github.com/stephenott/TAXII-Server", name = "StephenOTT")
         )
 )
 object Application {

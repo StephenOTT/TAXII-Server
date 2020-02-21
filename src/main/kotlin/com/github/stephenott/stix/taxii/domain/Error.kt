@@ -4,13 +4,13 @@ import com.fasterxml.jackson.annotation.JsonProperty
 import com.github.stephenott.stix.taxii.domain.types.Dictionary
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(name = "error", description = "The \u200Berror\u200B message is provided by TAXII Servers in the response body when returning an HTTP error status and contains more information describing the error, including a human-readable \u200Btitle\u200B and description\u200B, an \u200Berror_code\u200B and \u200Berror_id\u200B, and a \u200Bdetails\u200B structure to capture further structured information about the error. All of the properties are application-specific, and clients shouldn't assume consistent meaning across TAXII Servers even if the codes, IDs, or titles are the same.")
+@Schema(name = "error", description = "The error message is provided by TAXII Servers in the response body when returning an HTTP error status and contains more information describing the error, including a human-readable title and description, an error_code and error_id, and a details structure to capture further structured information about the error. All of the properties are application-specific, and clients shouldn't assume consistent meaning across TAXII Servers even if the codes, IDs, or titles are the same.")
 data class Error(
 
         @field:Schema(description = "A human readable plain text title for this error.")
         val title: String,
 
-        @field:Schema(description = "A human readable ​plain text​ description that gives details about the error or problem that was encountered by the application.")
+        @field:Schema(description = "A human readable plain text description that gives details about the error or problem that was encountered by the application.")
         val description: String? = null,
 
         @JsonProperty("error_id")
@@ -18,11 +18,11 @@ data class Error(
         val errorId: String? = null,
 
         @JsonProperty("error_code")
-        @field:Schema(name = "error_code", description = "The error code for this error type. A TAXII Server might choose to assign a common error code to all errors of the same type. Error codes are application-specific and not intended to be meaningful across different TAXII Servers​.")
+        @field:Schema(name = "error_code", description = "The error code for this error type. A TAXII Server might choose to assign a common error code to all errors of the same type. Error codes are application-specific and not intended to be meaningful across different TAXII Servers.")
         val errorCode: String? = null,
 
         @JsonProperty("http_status")
-        @field:Schema(name = "http_status", description = "The HTTP status code applicable to this error. If this property is provided it ​MUST​ match the HTTP status code found in the HTTP header.")
+        @field:Schema(name = "http_status", description = "The HTTP status code applicable to this error. If this property is provided it MUST match the HTTP status code found in the HTTP header.")
         val httpStatus: String? = null,
 
         @JsonProperty("external_details")

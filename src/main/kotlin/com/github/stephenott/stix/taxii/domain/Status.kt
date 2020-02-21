@@ -6,7 +6,7 @@ import com.github.stephenott.stix.taxii.domain.types.Timestamp
 import io.swagger.v3.oas.annotations.media.Schema
 
 
-@Schema(name = "status", description = "The status resource represents information about a request to add objects to a Collection. It contains information about the status of the request, such as whether or not it's completed (\u200Bstatus\u200B) and \u200BMAY contain the status of individual objects within the request (i.e. whether they are still pending, completed and failed, or completed and succeeded).")
+@Schema(name = "status", description = "The status resource represents information about a request to add objects to a Collection. It contains information about the status of the request, such as whether or not it's completed (status) and MAY contain the status of individual objects within the request (i.e. whether they are still pending, completed and failed, or completed and succeeded).")
 data class Status(
 
         @field:Schema(description = "The ​identifier​ of this Status resource.")
@@ -19,25 +19,26 @@ data class Status(
         @field:Schema(name = "request_timestamp", description = "The datetime of the request that this status resource is monitoring.")
         val requestTimestamp: Timestamp? = null,
 
-        @field:Schema(description = "The total number of objects that were in the request, which would be the number of objects in the ​envelope​. The value of the ​total_count MUST​ be a positive ​integer​ greater than or equal to zero. If this property has a value of 0, then the TAXII Server has not yet started processing the request.")
+        @JsonProperty("total_count")
+        @field:Schema(description = "The total number of objects that were in the request, which would be the number of objects in the envelope. The value of the total_count MUST be a positive integer greater than or equal to zero. If this property has a value of 0, then the TAXII Server has not yet started processing the request.")
         val totalCount: Int,
 
         @JsonProperty("success_count")
-        @field:Schema(name = "success_count", description = "The number of objects that were successfully created. The value of the ​success_count​ ​MUST be a positive ​integer​ greater than or equal to zero.")
+        @field:Schema(name = "success_count", description = "The number of objects that were successfully created. The value of the success_count MUST be a positive integer greater than or equal to zero.")
         val successCount: Int,
 
         @field:Schema(description = "A list of objects that was successfully processed.")
         val successes: List<StatusDetails>? = null,
 
         @JsonProperty("failure_count")
-        @field:Schema(name = "failure_count", description = "The number of objects that failed to be created. The value of the ​failure_count​ ​MUST​ be a positive ​integer​ greater than or equal to zero.")
+        @field:Schema(name = "failure_count", description = "The number of objects that failed to be created. The value of the failure_count MUST be a positive integer greater than or equal to zero.")
         val failureCount: Int,
 
         @field:Schema(description = "A list of objects that was not successfully processed.")
         val failures: List<StatusDetails>? = null,
 
         @JsonProperty("pending_count")
-        @field:Schema(name = "pending_count", description = "The number of objects that have yet to be processed. The value of the ​pending_count MUST​ be a positive ​integer​ greater than or equal to zero.")
+        @field:Schema(name = "pending_count", description = "The number of objects that have yet to be processed. The value of the pending_count MUST be a positive integer greater than or equal to zero.")
         val pendingCount: Int,
 
         @field:Schema(description = "A list of objects that have yet to be processed.")
@@ -52,7 +53,7 @@ data class Status(
     }
 }
 
-@Schema(name = "status-details", description = "This type represents an object that was added, is pending, or not added to the Collection. It contains the id\u200B and \u200Bversion\u200B of the object along with a \u200Bmessage\u200B describing any details about its status.")
+@Schema(name = "status-details", description = "This type represents an object that was added, is pending, or not added to the Collection. It contains the id and version of the object along with a message describing any details about its status.")
 data class StatusDetails(
 
         @field:Schema(description = "The identifier of the object that succeed, is pending, or failed to be created. For STIX objects the ​id​ ​MUST​ be the STIX Object ​id​. For object types that do not have their own identifier, the server ​MAY ​use any value as the ​id​.")

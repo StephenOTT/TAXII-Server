@@ -5,7 +5,6 @@ info:
   contact:
     name: StephenOTT
     url: http://github.com/stephenott/TAXII-Server
-    email: http://github.com/stephenott/TAXII-Server
   license:
     name: --
     url: http://github.com/stephenott
@@ -16,8 +15,8 @@ paths:
       summary: Get information about a specific API Root
       description: This Endpoint provides general information about an API Root, which
         can be used to help users and clients decide whether and how they want to
-        interact with it. Multiple API Roots ​MAY​ be hosted on a single TAXII Server.
-        Often, an API Root represents a single trust group.
+        interact with it. Multiple API Roots MAY be hosted on a single TAXII Server.  Often,
+        an API Root represents a single trust group.
       operationId: getApiRoot
       parameters:
       - name: apiRoot
@@ -43,6 +42,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -97,7 +98,7 @@ paths:
           type: string
       - name: statusId
         in: path
-        description: the ​identifier​ of the status message being requested
+        description: the identifier of the status message being requested
         required: true
         schema:
           type: string
@@ -118,6 +119,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -158,11 +161,11 @@ paths:
   /{apiRoot}/collections:
     get:
       summary: Get information about all collections
-      description: This Endpoint provides information about the Collections hosted
+      description: This endpoint provides information about the Collections hosted
         under this API Root. This is similar to the response to get a Collection,
         but rather than providing information about one Collection it provides information
         about all of the Collections. Most importantly, it provides the Collection's
-        ​id​, which is used to request objects or manifest entries from the Collection.
+        id, which is used to request objects or manifest entries from the Collection.
       operationId: getCollections
       parameters:
       - name: apiRoot
@@ -188,6 +191,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -242,7 +247,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -263,6 +268,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -318,7 +325,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -445,7 +452,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -569,7 +576,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -606,6 +613,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -669,10 +678,9 @@ paths:
   /{apiRoot}/collections/{collectionId}/objects/{objectId}:
     get:
       summary: Get a specific object from a collection
-      description: This Endpoint gets an object from a Collection by its ​id​. It
-        can be thought of as a search where the match[id]​ parameter is set to the
-        ​{object-id}​ in the path. For STIX 2 objects, the ​{object-id}​ ​MUST be
-        the STIX ​id​.
+      description: This Endpoint gets an object from a Collection by its id. It can
+        be thought of as a search where the match[id] parameter is set to the {objectId}
+        in the path. For STIX 2 objects, the {objectId} MUST be the STIX id.
       operationId: getCollectionObject
       parameters:
       - name: apiRoot
@@ -683,7 +691,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -789,8 +797,8 @@ paths:
   /{apiRoot}/collections/{collectionId}/objects/{objectId}}:
     delete:
       summary: Delete a specific object from a collection
-      description: This Endpoint deletes an object from a Collection by its ​id​.
-        For STIX 2 objects, the ​{object-id}​ ​MUST be the STIX ​id​.
+      description: This endpoint deletes an object from a Collection by its id. For
+        STIX 2 objects, the {object-id} MUST be the STIX id.
       operationId: deleteCollectionObject
       parameters:
       - name: apiRoot
@@ -801,7 +809,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -880,7 +888,7 @@ paths:
         in a Collection. This list can be used to decide whether it's worth retrieving
         the actual objects, or if new versions have been added. If a STIX object is
         not versioned (and therefore does not have a modified timestamp), the server
-        ​MUST ​use created​ timestamp.
+        MUST use created timestamp.
       operationId: getCollectionObjectVersions
       parameters:
       - name: apiRoot
@@ -891,7 +899,7 @@ paths:
           type: string
       - name: collectionId
         in: path
-        description: the ​identifier​ of the Collection being requested
+        description: the identifier of the Collection being requested
         required: true
         schema:
           type: string
@@ -1012,6 +1020,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
           content:
             application/taxii+json;version=2.1:
               schema:
@@ -1071,28 +1081,28 @@ components:
           uniqueItems: true
           type: array
           description: The list of TAXII versions that this API Root is compatible
-            with. The values listed in this property ​MUST match the media types defined
-            in Section​ 1​ .6.8.1​ and MUST​ include the optional version parameter.
-            A value of "​application/taxii+json;version=2.1"​ M​UST​ be included in
-            this list to indicate conformance with this specification.
+            with. The values listed in this property MUST match the media types defined
+            in Section 1.6.8.1 and MUST include the optional version parameter.  A
+            value of application/taxii+json;version=2.1 MUST be included in this list
+            to indicate conformance with this specification.
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
         max_content_length:
           type: integer
           description: The maximum size of the request body in octets (8-bit bytes)
-            that the server can support. The value of the max_content_length​ ​MUST​
-            be a positive ​integer greater than zero. This applies to requests only
+            that the server can support. The value of the max_content_length MUST
+            be a positive integer greater than zero. This applies to requests only
             and is determined by the server. Requests with total body length values
-            smaller than this value ​MUST NOT​ result in an HTTP 413 (Request Entity
+            smaller than this value MUST NOT result in an HTTP 413 (Request Entity
             Too Large) response. If for example, the server supported 100 MB of data,
             the value for this property would be determined by 100*1024*1024 which
             equals 104,857,600. This property contains useful information for the
             client when it POSTs requests to the Add Objects endpoint.
           format: int32
-      description: The ​api-root​ resource contains general information about the
-        API Root, such as a human-readable title​ and ​description​, the TAXII ​versions​
-        it supports, and the maximum size (​max_content_length​) of the content body
-        it will accept in a PUT or POST request.
+      description: The api-root resource contains general information about the API
+        Root, such as a human-readable title and description, the TAXII versions it
+        supports, and the maximum size (max_content_length) of the content body it
+        will accept in a PUT or POST request.
     Dictionary:
       type: object
       properties:
@@ -1108,7 +1118,7 @@ components:
           description: A human readable plain text title for this error.
         description:
           type: string
-          description: A human readable ​plain text​ description that gives details
+          description: A human readable plain text description that gives details
             about the error or problem that was encountered by the application.
           nullable: true
         error_id:
@@ -1122,12 +1132,12 @@ components:
           description: The error code for this error type. A TAXII Server might choose
             to assign a common error code to all errors of the same type. Error codes
             are application-specific and not intended to be meaningful across different
-            TAXII Servers​.
+            TAXII Servers.
           nullable: true
         http_status:
           type: string
           description: The HTTP status code applicable to this error. If this property
-            is provided it ​MUST​ match the HTTP status code found in the HTTP header.
+            is provided it MUST match the HTTP status code found in the HTTP header.
           nullable: true
         external_details:
           type: string
@@ -1138,10 +1148,10 @@ components:
           nullable: true
         details:
           $ref: '#/components/schemas/Dictionary'
-      description: The ​error​ message is provided by TAXII Servers in the response
+      description: The error message is provided by TAXII Servers in the response
         body when returning an HTTP error status and contains more information describing
-        the error, including a human-readable ​title​ and description​, an ​error_code​
-        and ​error_id​, and a ​details​ structure to capture further structured information
+        the error, including a human-readable title and description, an error_code
+        and error_id, and a details structure to capture further structured information
         about the error. All of the properties are application-specific, and clients
         shouldn't assume consistent meaning across TAXII Servers even if the codes,
         IDs, or titles are the same.
@@ -1169,8 +1179,8 @@ components:
             created, its pending state, or why the object failed to be created.
           nullable: true
       description: This type represents an object that was added, is pending, or not
-        added to the Collection. It contains the id​ and ​version​ of the object along
-        with a ​message​ describing any details about its status.
+        added to the Collection. It contains the id and version of the object along
+        with a message describing any details about its status.
     status:
       type: object
       properties:
@@ -1183,15 +1193,15 @@ components:
         totalCount:
           type: integer
           description: The total number of objects that were in the request, which
-            would be the number of objects in the ​envelope​. The value of the ​total_count
-            MUST​ be a positive ​integer​ greater than or equal to zero. If this property
+            would be the number of objects in the envelope. The value of the total_count
+            MUST be a positive integer greater than or equal to zero. If this property
             has a value of 0, then the TAXII Server has not yet started processing
             the request.
           format: int32
         success_count:
           type: integer
           description: The number of objects that were successfully created. The value
-            of the ​success_count​ ​MUST be a positive ​integer​ greater than or equal
+            of the success_count MUST be a positive integer greater than or equal
             to zero.
           format: int32
         successes:
@@ -1203,8 +1213,8 @@ components:
         failure_count:
           type: integer
           description: The number of objects that failed to be created. The value
-            of the ​failure_count​ ​MUST​ be a positive ​integer​ greater than or
-            equal to zero.
+            of the failure_count MUST be a positive integer greater than or equal
+            to zero.
           format: int32
         failures:
           type: array
@@ -1215,7 +1225,7 @@ components:
         pending_count:
           type: integer
           description: The number of objects that have yet to be processed. The value
-            of the ​pending_count MUST​ be a positive ​integer​ greater than or equal
+            of the pending_count MUST be a positive integer greater than or equal
             to zero.
           format: int32
         pendings:
@@ -1226,7 +1236,7 @@ components:
             $ref: '#/components/schemas/status-details'
       description: The status resource represents information about a request to add
         objects to a Collection. It contains information about the status of the request,
-        such as whether or not it's completed (​status​) and ​MAY contain the status
+        such as whether or not it's completed (status) and MAY contain the status
         of individual objects within the request (i.e. whether they are still pending,
         completed and failed, or completed and succeeded).
     collection:
@@ -1247,36 +1257,35 @@ components:
             to alias a collection ID. This could be used by organizations that want
             to preconfigure a known collection of data, regardless of the underlying,
             collection ID that is configured on a specific implementations.  If defined,
-            the alias ​MUST​ be unique within a single api-root on a single TAXII
-            server. There is no guarantee that an alias is globally unique across
-            api-roots or TAXII server instances.
+            the alias MUST be unique within a single api-root on a single TAXII server.
+            There is no guarantee that an alias is globally unique across api-roots
+            or TAXII server instances.
           nullable: true
         can_read:
           type: boolean
           description: Indicates if the requester can read (i.e., GET) objects from
-            this Collection. If​ t​ rue​,​ users are allowed to access the ​Get Objects​,
-            ​Get an Object​, or G​ et Object Manifests​ endpoints for this Collection.
-            If​ f​ alse​, ​users are not allowed to access these endpoints.
+            this Collection. If true, users are allowed to access the Get Objects,
+            Get an Object, or Get Object Manifests endpoints for this Collection.
+            If false, users are not allowed to access these endpoints.
         can_write:
           type: boolean
           description: Indicates if the requester can write (i.e., POST) objects to
-            this Collection. If​ ​true​,​ users are allowed to access the ​Add Objects​
-            endpoint for this Collection. If​ ​false​, users are not allowed to access
+            this Collection. If true, users are allowed to access the Add Objects
+            endpoint for this Collection. If false, users are not allowed to access
             this endpoint.
         media_types:
           type: array
           description: A list of supported media types for Objects in this Collection.
             Absence of this property is equivalent to a single-value list containing
-            "​application/stix+json"​. This list ​MUST​ describe all media types that
-            the Collection can store.
+            application/stix+json. This list MUST describe all media types that the
+            Collection can store.
           items:
             $ref: '#/components/schemas/TaxiiMediaType'
-      description: The ​collection​ resource contains general information about a
-        Collection, such as its ​id​, a human-readable ​title​ and ​description​,
-        an optional list of supported ​media_types​ (representing the media type of
-        objects can be requested from or added to it), and whether the TAXII Client,
-        as authenticated, can get objects from the Collection and/or add objects to
-        it.
+      description: The collection resource contains general information about a Collection,
+        such as its id, a human-readable title and description, an optional list of
+        supported media_types (representing the media type of objects can be requested
+        from or added to it), and whether the TAXII Client, as authenticated, can
+        get objects from the Collection and/or add objects to it.
     collections:
       type: object
       properties:
@@ -1284,12 +1293,12 @@ components:
           uniqueItems: true
           type: array
           description: A list of Collections. If there are no Collections in the list,
-            this key ​MUST​ be omitted, and the response is an empty object. The ​collection​
-            resource is defined in section ​5.2.1​.
+            this key MUST be omitted, and the response is an empty object. The collection
+            resource is defined in section 5.2.1.
           items:
             $ref: '#/components/schemas/collection'
-      description: The ​collections​ resource is a simple wrapper around a list of
-        ​collection​ resources.
+      description: The collections resource is a simple wrapper around a list of collection
+        resources.
     StixMediaType:
       type: string
       description: A Media Type that is for STIX content such as application/stix+json;version=2.1
@@ -1306,8 +1315,8 @@ components:
           $ref: '#/components/schemas/Timestamp'
         media_type:
           $ref: '#/components/schemas/StixMediaType'
-      description: The ​manifest-record​ type captures metadata about a single version
-        of an ​object​, indicated by the ​id property. The metadata includes information
+      description: The manifest-record type captures metadata about a single version
+        of an object, indicated by the id property. The metadata includes information
         such as when that version of the object was added to the Collection, the version
         of the object itself, and the media type that this specific version of the
         object is available in.
@@ -1318,16 +1327,16 @@ components:
           type: boolean
           description: This property identifies if there is more content available
             based on the search criteria. The absence of this property means the value
-            is false​.
+            is false.
         objects:
           uniqueItems: true
           type: array
           description: The list of manifest entries for objects returned by the request.
-            If there are no ​manifest-record items in the list, this key ​MUST​ be
-            omitted, and the response is an empty object.
+            If there are no manifest-record items in the list, this key MUST be omitted,
+            and the response is an empty object.
           items:
             $ref: '#/components/schemas/manifest-record'
-      description: The ​manifest​ resource is a simple wrapper around a list of ​manifest-record​
+      description: The manifest resource is a simple wrapper around a list of manifest-record
         items.
     stix-object:
       type: object
@@ -1343,8 +1352,8 @@ components:
         next:
           type: string
           description: This property identifies the server provided value of the next
-            record or set of records in the paginated data set. This property ​MAY​
-            be populated if the ​more​ property is set to ​true.​
+            record or set of records in the paginated data set. This property MAY
+            be populated if the more property is set to true.
           nullable: true
         objects:
           uniqueItems: true
@@ -1355,9 +1364,9 @@ components:
           items:
             $ref: '#/components/schemas/stix-object'
       description: The envelope is a simple wrapper for STIX 2 content. When returning
-        STIX 2 content in a TAXII response the HTTP root object payload ​MUST​ be
-        an ​envelope​. This specification does not define any other form of content
-        wrapper for objects outside of STIX content.
+        STIX 2 content in a TAXII response the HTTP root object payload MUST be an
+        envelope. This specification does not define any other form of content wrapper
+        for objects outside of STIX content.
     versions:
       type: object
       properties:
@@ -1365,17 +1374,17 @@ components:
           type: boolean
           description: This property identifies if there is more content available
             based on the search criteria. The absence of this property means the value
-            is false​.
+            is false.
           nullable: true
         versions:
           uniqueItems: true
           type: array
           description: The list of object versions returned by the request. If there
-            are no versions returned, this key ​MUST​ be omitted, and the response
-            is an empty object.
+            are no versions returned, this key MUST be omitted, and the response is
+            an empty object.
           items:
             $ref: '#/components/schemas/Timestamp'
-      description: The ​versions​ resource is a simple wrapper around a list of versions.
+      description: The versions resource is a simple wrapper around a list of versions.
     discovery:
       type: object
       properties:
@@ -1396,18 +1405,18 @@ components:
           nullable: true
         api_roots:
           type: array
-          description: A list of URLs that identify known API Roots. This list MAY​
-            be filtered on a per-client basis.  API Root URLs ​MUST​ be HTTPS absolute
-            URLs or relative URLs. API Root relative URLs ​MUST​ begin with a single
-            "/" character and ​MUST​ N​ OT​ begin with "//" or "../". API Root URLs
-            ​MUST NOT​ contain a URL query component.
+          description: A list of URLs that identify known API Roots. This list MAY
+            be filtered on a per-client basis.  API Root URLs MUST be HTTPS absolute
+            URLs or relative URLs. API Root relative URLs MUST begin with a single
+            "/" character and MUST NOT begin with "//" or "../". API Root URLs MUST
+            NOT contain a URL query component.
           nullable: true
           items:
             type: string
-      description: The ​discovery​ resource contains information about a TAXII Server,
-        such as a human-readable ​title​, description​, and ​contact​ information,
-        as well as a list of API Roots that it is advertising. It also has an indication
-        of which API Root it considers the ​default​, or the one to use in the absence
+      description: The discovery resource contains information about a TAXII Server,
+        such as a human-readable title, description, and contact information, as well
+        as a list of API Roots that it is advertising. It also has an indication of
+        which API Root it considers the default, or the one to use in the absence
         of another information/user choice.
   securitySchemes:
     basicAuth:

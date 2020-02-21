@@ -7,21 +7,22 @@ import com.github.stephenott.stix.taxii.domain.types.Timestamp
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
 
-@Schema(name = "manifest", description = "The \u200Bmanifest\u200B resource is a simple wrapper around a list of \u200Bmanifest-record\u200B items.")
+@Schema(name = "manifest", description = "The manifest resource is a simple wrapper around a list of manifest-record items.")
 data class Manifest(
-        @field:Schema(description = "This property identifies if there is more content available based on the search criteria. The absence of this property means the value is false​.")
+        @field:Schema(description = "This property identifies if there is more content available based on the search criteria. The absence of this property means the value is false.")
         val more: Boolean = false,
 
         @field:ArraySchema(
-                arraySchema = Schema(description = "The list of manifest entries for objects returned by the request. If there are no ​manifest-record items in the list, this key ​MUST​ be omitted, and the response is an empty object."),
+                arraySchema = Schema(description = "The list of manifest entries for objects returned by the request. If there are no manifest-record items in the list, this key MUST be omitted, and the response is an empty object."),
                 uniqueItems = true
         )
         val objects: List<ManifestRecord> = listOf() // @TODO omit to empty object
 ): TaxiiDomain
 
-@Schema(name = "manifest-record", description = "The \u200Bmanifest-record\u200B type captures metadata about a single version of an \u200Bobject\u200B, indicated by the \u200Bid property. The metadata includes information such as when that version of the object was added to the Collection, the version of the object itself, and the media type that this specific version of the object is available in.")
+@Schema(name = "manifest-record", description = "The manifest-record type captures metadata about a single version of an object, indicated by the id property. The metadata includes information such as when that version of the object was added to the Collection, the version of the object itself, and the media type that this specific version of the object is available in.")
 data class ManifestRecord(
 
+        //@TODO ** The description is not appearing in the swagger
         @field:Schema(description = "The identifier of the object that this manifest entry describes. For STIX objects the ​id​ ​MUST be the STIX Object ​id​. For object types that do not have their own identifier, the server ​MAY ​use any value as the ​id​.")
         val id: Identifier,
 

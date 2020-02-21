@@ -2,12 +2,14 @@ package com.github.stephenott.stix.taxii.controller
 
 import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.stephenott.stix.taxii.action.ProviderRequest
-import com.github.stephenott.stix.taxii.action.actions.AddCollectionObjectsProvider
 import com.github.stephenott.stix.taxii.action.actions.DiscoveryProvider
 import com.github.stephenott.stix.taxii.action.addAdditionalHeaders
 import com.github.stephenott.stix.taxii.domain.Discovery
 import com.github.stephenott.stix.taxii.domain.Error
-import io.micronaut.http.*
+import io.micronaut.http.HttpRequest
+import io.micronaut.http.HttpResponse
+import io.micronaut.http.HttpStatus
+import io.micronaut.http.MediaType
 import io.micronaut.http.annotation.Controller
 import io.micronaut.http.annotation.Get
 import io.micronaut.security.annotation.Secured
@@ -67,7 +69,7 @@ open class DiscoveryController() {
             ]
     )
     @ApiResponses(
-            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Discovery::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
+            ApiResponse(responseCode = "200", description = "The request was successful", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Discovery::class))], headers = [Header(name = Headers.CONTENT_TYPE, required = true, schema = Schema(type = "string"), description = "Always value of ${TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1}")]),
             ApiResponse(responseCode = "400", description = "The server did not understand the request or filter parameters", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "401", description = "The client needs to authenticate", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
             ApiResponse(responseCode = "403", description = "The client does not have access to this resource", content = [Content(mediaType = TaxiiMediaType.APPLCATION_JSON_TAXII_VERSION_2_1, schema = Schema(implementation = Error::class))]),
