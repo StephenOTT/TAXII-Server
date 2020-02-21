@@ -389,6 +389,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -516,6 +518,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -747,6 +751,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
@@ -948,6 +954,8 @@ paths:
             Content-Type:
               description: Always value of application/taxii+json;version=2.1
               required: true
+              schema:
+                type: string
             X-TAXII-Date-Added-First:
               description: timestamp
               required: true
