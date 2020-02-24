@@ -1,6 +1,6 @@
 package com.github.stephenott.stix.taxii.domain
 
-import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.*
 import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
@@ -21,7 +21,10 @@ data class ApiRoot(
 
         @JsonProperty("max_content_length")
         @field:Schema(name = "max_content_length", description = "The maximum size of the request body in octets (8-bit bytes) that the server can support. The value of the max_content_length MUST be a positive integer greater than zero. This applies to requests only and is determined by the server. Requests with total body length values smaller than this value MUST NOT result in an HTTP 413 (Request Entity Too Large) response. If for example, the server supported 100 MB of data, the value for this property would be determined by 100*1024*1024 which equals 104,857,600. This property contains useful information for the client when it POSTs requests to the Add Objects endpoint.")
-        val maxContentLength: Int
+        val maxContentLength: Int,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
 
 ) : TaxiiDomain {
     init {

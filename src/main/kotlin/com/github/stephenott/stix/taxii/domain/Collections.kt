@@ -1,6 +1,9 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
 import com.github.stephenott.stix.taxii.domain.types.Identifier
 import io.swagger.v3.oas.annotations.media.ArraySchema
@@ -13,7 +16,11 @@ data class Collections(
                 arraySchema = Schema(description = "A list of Collections. If there are no Collections in the list, this key MUST be omitted, and the response is an empty object. The collection resource is defined in section 5.2.1."),
                 uniqueItems = true
         )
-        val collections: List<Collection> = listOf() //@TODO must return a empoty object when empty list
+        val collections: List<Collection> = listOf(), //@TODO must return a empoty object when empty list
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain {}
 
 @Schema(name = "collection", description = "The collection resource contains general information about a Collection, such as its id, a human-readable title and description, an optional list of supported media_types (representing the media type of objects can be requested from or added to it), and whether the TAXII Client, as authenticated, can get objects from the Collection and/or add objects to it.")
@@ -41,5 +48,9 @@ data class Collection(
 
         @JsonProperty("media_types")
         @field:Schema(name = "media_types", description = "A list of supported media types for Objects in this Collection. Absence of this property is equivalent to a single-value list containing application/stix+json. This list MUST describe all media types that the Collection can store.")
-        val mediaTypes: List<TaxiiMediaType>
+        val mediaTypes: List<TaxiiMediaType>,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain {}

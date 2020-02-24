@@ -1,6 +1,9 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.github.stephenott.stix.taxii.domain.types.Dictionary
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -30,5 +33,9 @@ data class Error(
         val externalDetails: String? = null,
 
         @field:Schema(description = "The details property captures additional server-specific details about the error. The keys and values are determined by the TAXII Server and ​MAY be any valid JSON object structure.")
-        val details: Dictionary? = null
+        val details: Dictionary? = null,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain

@@ -1,6 +1,9 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import io.swagger.v3.oas.annotations.media.Schema
 
 @Schema(name = "discovery", description = "The discovery resource contains information about a TAXII Server, such as a human-readable title, description, and contact information, as well as a list of API Roots that it is advertising. It also has an indication of which API Root it considers the default, or the one to use in the absence of another information/user choice.")
@@ -20,7 +23,11 @@ data class Discovery(
 
         @JsonProperty("api_roots")
         @field:Schema(name = "api_roots", description = "A list of URLs that identify known API Roots. This list MAY be filtered on a per-client basis.  API Root URLs MUST be HTTPS absolute URLs or relative URLs. API Root relative URLs MUST begin with a single \"/\" character and MUST NOT begin with \"//\" or \"../\". API Root URLs MUST NOT contain a URL query component.")
-        val apiRoots: List<String>? = null // @TODO should be a null or empty list?
+        val apiRoots: List<String>? = null, // @TODO should be a null or empty list?
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain {
     init {
         default?.let {

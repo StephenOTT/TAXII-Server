@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper
 import com.github.stephenott.stix.taxii.action.Action
 import com.github.stephenott.stix.taxii.action.ProviderRequest
 import com.github.stephenott.stix.taxii.action.ProviderResponse
-import com.github.stephenott.stix.taxii.controller.NotImplementedException
 import com.github.stephenott.stix.taxii.controller.TaxiiException
 import com.github.stephenott.stix.taxii.domain.Discovery
 import org.slf4j.Logger
@@ -35,6 +34,9 @@ class DiscoveryProvider : Action<Unit, Discovery> {
                                 "/default-root-1",
                                 "/root2",
                                 "/root3"
+                        ),
+                        customProperties = mapOf(
+                                Pair("x-someKey", "someValue")
                         )
                 ),
                 providerRequest.acceptType

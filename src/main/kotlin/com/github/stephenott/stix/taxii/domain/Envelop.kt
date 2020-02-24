@@ -1,5 +1,7 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.github.stephenott.stix.taxii.domain.types.StixObject
 import io.swagger.v3.oas.annotations.media.ArraySchema
 import io.swagger.v3.oas.annotations.media.Schema
@@ -21,7 +23,11 @@ data class Envelop(
                 arraySchema = Schema(description = "This property contains one or more STIX Objects. Objects in this list MUST be a STIX Object (e.g., SDO, SCO, SRO, Language Content object, or a Marking Definition object)."),
                 uniqueItems = true
         )
-        val objects: List<StixObject> = listOf()
+        val objects: List<StixObject> = listOf(),
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ) : TaxiiDomain {
     init {
         next?.let {

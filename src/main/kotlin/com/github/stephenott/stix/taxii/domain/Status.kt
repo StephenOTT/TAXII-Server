@@ -1,6 +1,9 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.github.stephenott.stix.taxii.domain.types.Identifier
 import com.github.stephenott.stix.taxii.domain.types.Timestamp
 import io.swagger.v3.oas.annotations.media.Schema
@@ -42,7 +45,10 @@ data class Status(
         val pendingCount: Int,
 
         @field:Schema(description = "A list of objects that have yet to be processed.")
-        val pendings: List<StatusDetails>? = null
+        val pendings: List<StatusDetails>? = null,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
 
 ): TaxiiDomain {
     init {
@@ -63,7 +69,11 @@ data class StatusDetails(
         val version: Timestamp,
 
         @field:Schema(description = "A message indicating more information about the object being created, its pending state, or why the object failed to be created.")
-        val message: String? = null
+        val message: String? = null,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain
 
 enum class RequestStatus{

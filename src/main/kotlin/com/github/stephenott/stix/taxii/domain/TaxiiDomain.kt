@@ -1,4 +1,5 @@
 package com.github.stephenott.stix.taxii.domain
 
-interface TaxiiDomain {
-}
+interface TaxiiDomain:
+        CustomProperties
+{}

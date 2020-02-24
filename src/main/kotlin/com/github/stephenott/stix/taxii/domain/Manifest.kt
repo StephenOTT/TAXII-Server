@@ -1,6 +1,9 @@
 package com.github.stephenott.stix.taxii.domain
 
+import com.fasterxml.jackson.annotation.JsonAnyGetter
+import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
+import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.github.stephenott.stix.taxii.controller.StixMediaType
 import com.github.stephenott.stix.taxii.domain.types.Identifier
 import com.github.stephenott.stix.taxii.domain.types.Timestamp
@@ -16,7 +19,11 @@ data class Manifest(
                 arraySchema = Schema(description = "The list of manifest entries for objects returned by the request. If there are no manifest-record items in the list, this key MUST be omitted, and the response is an empty object."),
                 uniqueItems = true
         )
-        val objects: List<ManifestRecord> = listOf() // @TODO omit to empty object
+        val objects: List<ManifestRecord> = listOf(), // @TODO omit to empty object
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain
 
 @Schema(name = "manifest-record", description = "The manifest-record type captures metadata about a single version of an object, indicated by the id property. The metadata includes information such as when that version of the object was added to the Collection, the version of the object itself, and the media type that this specific version of the object is available in.")
@@ -35,5 +42,9 @@ data class ManifestRecord(
 
         @JsonProperty("media_type")
         @field:Schema(name = "media_type", description = "The media type that this specific version of the object can be requested in. This value ​MUST​ be one of the media types listed on the​ c​ ollection resource.")
-        val mediaType: StixMediaType? = null
+        val mediaType: StixMediaType? = null,
+
+        @JsonAnySetter @get:JsonAnyGetter
+        override val customProperties: Map<String, Any> = mapOf()
+
 ): TaxiiDomain
