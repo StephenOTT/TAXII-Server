@@ -19,4 +19,8 @@ data class Versions(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}

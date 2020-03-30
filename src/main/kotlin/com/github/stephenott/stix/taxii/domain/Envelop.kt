@@ -34,5 +34,7 @@ data class Envelop(
             require(more, lazyMessage = { "Envelop's next property can only be populated if the more property is true." })
         }
         //@TODO add a plugin STIX validator for the returned objects
+
+        CustomProperties.validateCustomProperties(customProperties)
     }
 }

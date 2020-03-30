@@ -13,5 +13,9 @@ interface CustomProperties {
             require(key.startsWith(CustomProperties.PROPERTY_PREFX),
                     lazyMessage = {"Custom properties must start with '${CustomProperties.PROPERTY_PREFX}'"})
         }
+
+        fun validateCustomProperties(map: Map<String, Any>){
+            map.forEach { validateKey(it.key) }
+        }
     }
 }

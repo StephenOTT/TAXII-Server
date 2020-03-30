@@ -3,7 +3,6 @@ package com.github.stephenott.stix.taxii.domain
 import com.fasterxml.jackson.annotation.JsonAnyGetter
 import com.fasterxml.jackson.annotation.JsonAnySetter
 import com.fasterxml.jackson.annotation.JsonProperty
-import com.fasterxml.jackson.annotation.JsonUnwrapped
 import com.github.stephenott.stix.taxii.domain.types.Dictionary
 import io.swagger.v3.oas.annotations.media.Schema
 
@@ -38,4 +37,8 @@ data class Error(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}

@@ -1,11 +1,13 @@
 package com.github.stephenott.stix.taxii.action
 
 import com.github.stephenott.stix.taxii.controller.TaxiiMediaType
+import io.micronaut.core.convert.value.ConvertibleMultiValues
 import io.micronaut.http.HttpHeaders
 import io.micronaut.http.HttpMethod
 import io.micronaut.http.HttpParameters
 import io.micronaut.http.HttpRequest
 import io.micronaut.http.cookie.Cookies
+import org.jetbrains.kotlin.daemon.common.findWithTransform
 import java.net.InetSocketAddress
 import java.security.Principal
 
@@ -39,4 +41,5 @@ data class ProviderRequest<T> (
             isSecure = request.isSecure,
             principal = request.userPrincipal.takeIf { it.isPresent }?.get()
     )
+
 }

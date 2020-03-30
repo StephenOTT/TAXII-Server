@@ -50,12 +50,14 @@ data class Status(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain {
+) : TaxiiDomain {
     init {
         require(totalCount >= 0)
         require(successCount >= 0)
         require(failureCount >= 0)
         require(pendingCount >= 0)
+
+        CustomProperties.validateCustomProperties(customProperties)
     }
 }
 
@@ -74,15 +76,19 @@ data class StatusDetails(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}
 
-enum class RequestStatus{
-    COMPLETE{
+enum class RequestStatus {
+    COMPLETE {
         override fun toString(): String {
             return "complete"
         }
     },
-    PENDING{
+    PENDING {
         override fun toString(): String {
             return "pending"
         }

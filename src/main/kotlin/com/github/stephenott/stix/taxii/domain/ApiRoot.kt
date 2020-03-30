@@ -32,5 +32,8 @@ data class ApiRoot(
 //        require(versions.containsAll(TaxiiVersion.supportedTaxiiVersions), lazyMessage = {"api-root versions property can only include ${TaxiiVersion.supportedTaxiiVersions}"})
         //@TODO add require for other media types that include the version parameter
         require(maxContentLength > 0)
+
+        CustomProperties.validateCustomProperties(customProperties)
+
     }
 }

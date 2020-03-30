@@ -21,7 +21,11 @@ data class Collections(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain {}
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}
 
 @Schema(name = "collection", description = "The collection resource contains general information about a Collection, such as its id, a human-readable title and description, an optional list of supported media_types (representing the media type of objects can be requested from or added to it), and whether the TAXII Client, as authenticated, can get objects from the Collection and/or add objects to it.")
 data class Collection(
@@ -53,4 +57,8 @@ data class Collection(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain {}
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}

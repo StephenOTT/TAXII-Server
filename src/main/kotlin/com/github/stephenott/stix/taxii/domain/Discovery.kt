@@ -28,7 +28,7 @@ data class Discovery(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain {
+) : TaxiiDomain {
     init {
         default?.let {
             require(apiRoots != null)
@@ -37,5 +37,7 @@ data class Discovery(
         apiRoots?.let {
             require(it.isNotEmpty())
         }
+
+        CustomProperties.validateCustomProperties(customProperties)
     }
 }

@@ -24,7 +24,11 @@ data class Manifest(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}
 
 @Schema(name = "manifest-record", description = "The manifest-record type captures metadata about a single version of an object, indicated by the id property. The metadata includes information such as when that version of the object was added to the Collection, the version of the object itself, and the media type that this specific version of the object is available in.")
 data class ManifestRecord(
@@ -47,4 +51,8 @@ data class ManifestRecord(
         @JsonAnySetter @get:JsonAnyGetter
         override val customProperties: Map<String, Any> = mapOf()
 
-): TaxiiDomain
+) : TaxiiDomain {
+    init {
+        CustomProperties.validateCustomProperties(customProperties)
+    }
+}
