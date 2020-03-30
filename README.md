@@ -14,7 +14,7 @@ The server targets a full OpenAPI/Swagger Client API file that can be used as do
 
 Download the jar from [releases](https://github.com/StephenOTT/TAXII-Server/releases)
 
-Then run: `java -jar taxii-server-micronaut-0.5-all.jar`
+Then run: `java -jar taxii-server-micronaut-0.6-all.jar`
 
 ## Default Basic Auth
 
